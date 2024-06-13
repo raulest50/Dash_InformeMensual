@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  dash_app:
+    build: .
+    ports:
+      - "8050:8050"
