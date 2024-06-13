@@ -18,7 +18,7 @@ gris = "#808080"
 
 
 def getDataFrame():
-    cliente = Socrata("www.datos.gov.co", None, timeout=20)
+    cliente = Socrata("www.datos.gov.co", None, timeout=10)
 
     not_success = True
 

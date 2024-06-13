@@ -11,9 +11,13 @@ import methods
 from methods import getDataFrame
 from os.path import exists
 
-df = pd.read_csv('vmensual.csv')
+# this for production
+df = getDataFrame()
+df['mes_despacho'] = df['mes_despacho'].astype(int)
 
-# Sample data
+# this piece of code only for debuging
+"""
+df = None
 if(exists('./vmensual.csv')):
     df = pd.read_csv('vmensual.csv')
     print("dataframe obtained locally")
@@ -21,6 +25,7 @@ else:
     df = getDataFrame()
     print("dataframe obtained from remote origin")
     df.to_csv('vmensual.csv', index=False)
+"""
 
 # Initialize the Dash app with Bootstrap stylesheet
 app = dash.Dash(__name__, external_stylesheets=[
