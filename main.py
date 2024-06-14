@@ -11,21 +11,23 @@ import methods
 from methods import getDataFrame
 from os.path import exists
 
+from Constants import style_data, style_cell, style_header, style_table, style_graph
+
 # this for production
 df = getDataFrame()
 df['mes_despacho'] = df['mes_despacho'].astype(int)
 
+
 # this piece of code only for debuging
-"""
-df = None
-if(exists('./vmensual.csv')):
-    df = pd.read_csv('vmensual.csv')
-    print("dataframe obtained locally")
-else:
-    df = getDataFrame()
-    print("dataframe obtained from remote origin")
-    df.to_csv('vmensual.csv', index=False)
-"""
+# df = None
+# if(exists('./vmensual.csv')):
+#     df = pd.read_csv('vmensual.csv')
+#     print("dataframe obtained locally")
+# else:
+#     df = getDataFrame()
+#     print("dataframe obtained from remote origin")
+#     df.to_csv('vmensual.csv', index=False)
+
 
 # Initialize the Dash app with Bootstrap stylesheet
 app = dash.Dash(__name__, external_stylesheets=[
@@ -52,7 +54,7 @@ app.layout = dbc.Container([
 
     dbc.Row([
             dbc.Col([
-                    html.Label("Seleccionar Mes:", htmlFor='month-dropdown'),  # Add label
+                    html.Label("Seleccionar Mes:", htmlFor='month-dropdown', style={'padding': '0.2em'}),  # Add label
                     dcc.Dropdown(
                         id='month-dropdown',
                         options=[{'label': f"{i:02}", 'value': f"{i:02}"} for i in range(1, 13)],
@@ -60,34 +62,34 @@ app.layout = dbc.Container([
                         clearable=False
                     )
                 ], width=3),
-        ], justify='left', align='center', style={'padding': '1em'}),
+        ], justify='left', align='center', style={'padding': '2em'}),
 
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id='corriente')  # Placeholder for the plot
+            dcc.Graph(id='corriente', style=style_graph)  # Placeholder for the plot
         ], width=4),
         dbc.Col([
-            dcc.Graph(id='acpm')  # Placeholder for the plot
+            dcc.Graph(id='acpm', style=style_graph)  # Placeholder for the plot
         ], width=4),
         dbc.Col([
-            dcc.Graph(id='extra')  # Placeholder for the plot
+            dcc.Graph(id='extra', style=style_graph)  # Placeholder for the plot
         ], width=4)
-    ]),
+    ], style={'padding': '2em'}),
 
 dbc.Row([
         dbc.Col([
             dash_table.DataTable(id='corriente-table',
-                                 style_cell={'textAlign': 'center'}
+                                 style_cell=style_cell, style_header = style_header, style_data=style_data, style_table=style_table,
                                  )
         ], width=4),
         dbc.Col([
             dash_table.DataTable(id='acpm-table',
-                                 style_cell={'textAlign': 'center'}
+                                 style_cell=style_cell, style_header = style_header, style_data=style_data, style_table=style_table,
                                  )
         ], width=4),
         dbc.Col([
             dash_table.DataTable(id='extra-table',
-                                 style_cell={'textAlign': 'center'}
+                                 style_cell=style_cell, style_header = style_header, style_data=style_data, style_table=style_table,
                                  )
         ], width=4)
     ], style={'padding': '2em'}),
@@ -141,11 +143,15 @@ def update_graph(mes_seleccionado):
     def create_table_data(producto):
         dfc = dfm[dfm['producto'] == producto].copy()
         dfc['volumen_total'] = dfc['volumen_total'].astype(float) / 1_000_000
+        dfc['volumen_total'] = dfc['volumen_total'].round(2)
         dfc['anio_despacho'] = dfc['anio_despacho'].astype(int)
         dfc = dfc.sort_values(by='anio_despacho')
 
         dfc['percentage_variation'] = dfc['volumen_total'].pct_change().fillna(0) * 100
         dfc['percentage_variation'] = dfc['percentage_variation'].round(2)
+
+        dfc['percentage_variation'] = dfc['percentage_variation'].astype(str)
+        dfc.loc[dfc.index[0], 'percentage_variation'] = '-'
 
         return dfc[['anio_despacho', 'volumen_total', 'percentage_variation']].to_dict('records'), [
             {"name": "Año", "id": "anio_despacho"},

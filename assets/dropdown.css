@@ -1,0 +1,37 @@
+/* dropdown.css */
+
+.Select-control {
+    border: none !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    background-color: white !important;
+}
+
+.Select-menu-outer {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 4px !important;
+}
+
+.Select-option {
+    padding: 10px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 20px !important;
+    border-bottom: 1px solid #f1f1f1 !important;
+}
+
+.Select-option:last-child {
+    border-bottom: none !important;
+}
+
+.Select-option:hover {
+    background-color: #f5f5f5 !important;
+}
+
+.Select-option.is-focused {
+    background-color: #41B75C !important;
+    color: white !important;
+}
+
+.Select-value-label {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 16px !important;
+}
