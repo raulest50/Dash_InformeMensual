@@ -11,7 +11,7 @@ import methods
 from methods import getDataFrame
 from os.path import exists
 
-from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2, style_header1, style_header4
+from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2, style_header1, style_header4, style_H3, style_text_bottom, style_H2
 
 # this for production
 df = getDataFrame()
@@ -48,7 +48,7 @@ app.layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.P(Constants.parrafoTop, style={})
+            html.P(Constants.parrafoTop, style=style_text_bottom)
         ], width=12)
     ], style={'padding': '2em'}),
 
@@ -79,9 +79,8 @@ app.layout = dbc.Container([
         ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
     ], style={'padding': '2em'}),
 
-    dbc.Row([
-
-    ], style={'page-break-before': 'always'}),
+    dbc.Row([ # no tiene efecto en la visual de la pagina, solo para un page break cuando se haga ctrl + p
+    ], style={'pageBreakBefore': 'always'}),
 
     dbc.Row([
         dbc.Col([
@@ -103,6 +102,29 @@ app.layout = dbc.Container([
                                  )
         ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
     ], style={'padding': '2em'}),
+
+    dbc.Row([
+        dbc.Col([
+            html.H2("RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS MAYO 2024", style=style_H2),
+            html.H3("Información sobre la fuente de datos.", style=style_H3),
+            html.P(Constants.parrafo_dt_source, style=style_text_bottom),
+            html.H3("Reporte de la variación mensual de ventas MAYO 2024:", style=style_H3),
+            html.P(Constants.Gen_parrafoBottom(), style=style_text_bottom),
+        ])
+    ], style={'padding': '2em'}),
+
+    dbc.Row([
+        dbc.Col([
+            html.P("Raul Esteban Alzate", style=style_text_bottom),
+            html.P(Constants.correo_esteban, style=style_text_bottom),
+            html.P(Constants.cel_esteban, style=style_text_bottom),
+        ], width=6),
+    dbc.Col([
+            html.P("Juan David Bonilla", style=style_text_bottom),
+            html.P(Constants.correo_juan, style=style_text_bottom),
+            html.P(Constants.cel_juan, style=style_text_bottom),
+        ], width=6)
+    ], style={'padding': '2em'})
 
 ], fluid=True)
 
