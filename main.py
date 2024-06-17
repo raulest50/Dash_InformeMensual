@@ -11,14 +11,14 @@ import methods
 from methods import getDataFrame
 from os.path import exists
 
-from Constants import style_data, style_cell, style_header, style_table, style_graph
+from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2, style_header1, style_header4
 
 # this for production
 df = getDataFrame()
 df['mes_despacho'] = df['mes_despacho'].astype(int)
 
 
-# this piece of code only for debuging
+#this piece of code only for debuging
 # df = None
 # if(exists('./vmensual.csv')):
 #     df = pd.read_csv('vmensual.csv')
@@ -39,11 +39,11 @@ app = dash.Dash(__name__, external_stylesheets=[
 app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
-            html.H1("Reporte Mensual Ventas Combustible Liquido", style={'fontFamily': "'Plus Jakarta Sans', sans-serif", 'textAlign': 'left'})
-        ], width=9, className='text-center', style={'textAlign': 'center'}),
+            html.H1(" Reporte Mensual Ventas Combustible Liquido", style=style_header1)
+        ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
         dbc.Col([
             html.Img(src='/assets/logoComce-Soldicom.png', style={'width': '100%', 'height': 'auto'}),
-        ], width=3),
+        ], width=3, xl=3, lg=3, md=6, sm=6, xs=12),
     ], justify='center', align='center', style={'padding': '2em'}),
 
     dbc.Row([
@@ -61,37 +61,47 @@ app.layout = dbc.Container([
                         value='01',  # Default selected month
                         clearable=False
                     )
-                ], width=3),
+                ], width=3, xl=3, lg=3, md=10, sm=10, xs=10),
+            dbc.Col([
+                    html.Div(),
+                ], width=9, xl=9, lg=9, md=2, sm=2, xs=2),
         ], justify='left', align='center', style={'padding': '2em'}),
 
     dbc.Row([
         dbc.Col([
             dcc.Graph(id='corriente', style=style_graph)  # Placeholder for the plot
-        ], width=4),
+        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
         dbc.Col([
             dcc.Graph(id='acpm', style=style_graph)  # Placeholder for the plot
-        ], width=4),
+        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
         dbc.Col([
             dcc.Graph(id='extra', style=style_graph)  # Placeholder for the plot
-        ], width=4)
+        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
     ], style={'padding': '2em'}),
 
-dbc.Row([
+    dbc.Row([
+
+    ], style={'page-break-before': 'always'}),
+
+    dbc.Row([
         dbc.Col([
+            html.H4("Corriente", style=style_header4),
             dash_table.DataTable(id='corriente-table',
-                                 style_cell=style_cell, style_header = style_header, style_data=style_data, style_table=style_table,
+                                 style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
                                  )
-        ], width=4),
+        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
         dbc.Col([
+            html.H4("ACPM", style=style_header4),
             dash_table.DataTable(id='acpm-table',
-                                 style_cell=style_cell, style_header = style_header, style_data=style_data, style_table=style_table,
+                                 style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
                                  )
-        ], width=4),
+        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
         dbc.Col([
+            html.H4("Extra", style=style_header4),
             dash_table.DataTable(id='extra-table',
-                                 style_cell=style_cell, style_header = style_header, style_data=style_data, style_table=style_table,
+                                 style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
                                  )
-        ], width=4)
+        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
     ], style={'padding': '2em'}),
 
 ], fluid=True)

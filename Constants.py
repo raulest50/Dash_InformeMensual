@@ -40,9 +40,22 @@ style_table = {
 
 
 style_graph = {
-    'box-shadow': '0 2px 1px 0 rgba(0, 0, 0, 0.05), 0 3px 5px 0 rgba(0, 0, 0, 0.1)'
+    'boxShadow': '0 2px 1px 0 rgba(0, 0, 0, 0.05), 0 3px 5px 0 rgba(0, 0, 0, 0.1)'
 }
 
 style_graph2 = {
-    'box-shadow': '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+    'boxShadow': '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+}
+
+
+style_header1 = {
+    'fontFamily': "'Plus Jakarta Sans', sans-serif",
+    'textAlign': 'left',
+    'borderLeft': f'20px solid {verde}',
+    'padding': '0.2em',
+}
+
+style_header4 = {
+    'fontFamily': "'Plus Jakarta Sans', sans-serif",
+    'textAlign': 'center',
 }
