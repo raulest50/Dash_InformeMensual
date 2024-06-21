@@ -15,19 +15,19 @@ from Constants import style_data, style_cell, style_header, style_table, style_g
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label
 
 # this for production
-df = getDataFrame_suset()
-df['mes_despacho'] = df['mes_despacho'].astype(int)
+# df = getDataFrame_suset()
+# df['mes_despacho'] = df['mes_despacho'].astype(int)
 
 
 #this piece of code only for debuging
-# df = None
-# if(exists('./vmensual.csv')):
-#     df = pd.read_csv('vmensual.csv')
-#     print("dataframe obtained locally")
-# else:
-#     df = getDataFrame_suset()
-#     print("dataframe obtained from remote origin")
-#     df.to_csv('vmensual.csv', index=False)
+df = None
+if(exists('./vmensual.csv')):
+    df = pd.read_csv('vmensual.csv')
+    print("dataframe obtained locally")
+else:
+    df = getDataFrame_suset()
+    print("dataframe obtained from remote origin")
+    df.to_csv('vmensual.csv', index=False)
 
 
 # Initialize the Dash app with Bootstrap stylesheet
@@ -170,7 +170,6 @@ def update_graph(mes_seleccionado, geo_seleccionada):
     else:
         #print(f"dict res: {Constants.geo_dict.get(geo_seleccionada)}")
         dfmm = df[df['municipio'] == Constants.geo_dict.get(geo_seleccionada)].copy()
-
         dfm = dfmm[dfmm['mes_despacho'] == int(mes_seleccionado)].copy()
 
 
