@@ -40,3 +40,25 @@ def getDataFrame():
             print("time out exception")
             not_success = True
 
+def getDataFrame_suset():
+    cliente = Socrata("www.datos.gov.co", None, timeout=10)
+
+    not_success = True
+
+    while not_success:
+        try:
+            query = (
+                f"SELECT SUM(volumen_despachado) as volumen_total, anio_despacho, mes_despacho, producto, municipio "
+                f"WHERE subtipo_comprador IN ('{c1}', '{c2}', '{c3}') "
+                f"AND producto IN ('{p1}', '{p2}', '{p3}') "
+                f"GROUP BY anio_despacho, mes_despacho, producto, municipio "
+                f"ORDER BY anio_despacho ASC "
+                f"LIMIT 250000 "
+            )
+
+            results = cliente.get("339g-zjac", query=query)
+            df = pd.DataFrame.from_records(results)
+            return df
+        except requests.exceptions.Timeout:
+            print("time out exception")
+            not_success = True

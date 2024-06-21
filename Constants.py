@@ -35,7 +35,8 @@ parrafo_dt_source = """
         Análisis de datos de COMCE, en la administración de los recursos parafiscales de SOLDICOM. 
         La fuente de los datos es el acceso remoto a Cubo Sicom otorgado por el Ministerio de Minas y Energía para COMCE-SOLDICOM. 
         Los datos reportan el volumen agregado del sector, a nivel país, reporte de ventas de combustibles líquidos a 
-        través de Estaciones de servicio, incluyendo Zonas de frontera. *Si se requieren datos de un departamento, municipio o
+        través de los agentes compradores COMERCIALIZADOR INDUSTRIAL, ESTACION DE SERVICIO AUTOMOTRIZ y ESTACION DE SERVICIO FLUVIAL.
+        Se incluyeron Zonas de frontera. *Si se requieren datos de un departamento, municipio o
         ciudad en específico favor contactarse con la Coordinación.
 """
 
@@ -115,6 +116,84 @@ style_text_bottom = {
     'fontSize': '20px'
 }
 
+style_drop_label = {
+    'fontFamily': "'Plus Jakarta Sans', sans-serif",
+    'fontSize': '18px',
+    'padding': '0.2em'
+}
+
+
+
+geo = [
+    "Todo el Pais",
+    "Bogotá, D.C.",
+    "Santiago de Cali, Valle del Cauca",
+    "Barranquilla, Atlántico",
+    "Medellín, Antioquia",
+    "Montería, Córdoba",
+    "Cartagena de Indias, Bolívar",
+    "Pereira, Risaralda",
+    "Ibagué, Tolima",
+    "Bucaramanga, Santander",
+    "Sincelejo, Sucre",
+    "Manizales, Caldas",
+    "Villavicencio, Meta",
+    "Popayán, Cauca",
+    "Santiago de Tunja, Boyacá",
+    "Barrancabermeja, Santander",
+    "Chía, Cundinamarca",
+    "Palmira, Valle del Cauca",
+    "Soacha, Cundinamarca",
+    "Tuluá, Valle del Cauca",
+    "Cartago, Valle del Cauca",
+    "Armenia, Quindío",
+    "Rionegro, Antioquia",
+    "Neiva, Huila",
+    "Santa Marta, Magdalena",
+    "Sogamoso, Boyacá"
+]
+
+
+
+
+geo_translate = [
+    "Todo el Pais",
+    "BOGOTA, D.C.",
+    "CALI",
+    "BARRANQUILLA",
+    "MEDELLIN",
+    "MONTERIA",
+    "CARTAGENA DE INDIAS",
+    "PEREIRA",
+    "IBAGUE",
+    "BUCARAMANGA",
+    "SINCELEJO",
+    "MANIZALES",
+    "VILLAVICENCIO",
+    "POPAYAN",
+    "TUNJA",
+    "BARRANCABERMEJA",
+    "CHIA",
+    "PALMIRA",
+    "SOACHA",
+    "TULUA",
+    "CARTAGO",
+    "ARMENIA",
+    "RIONEGRO",
+    "NEIVA",
+    "SANTA MARTA",
+    "SOGAMOSO"
+]
+
+
+"""
+hay ciudades de colobia que el nombre puede ser confuso, por ejemplo santiago de tunja es tunja y cartagena de indias
+es diferente de cartagena (hay 2 cartagenas). por eso es util colocar el nombre del municipio como en el array geo.
+pero en la base de datos abierta de mayoriastas el string es diferente. por ejemplo en la bd es CALI en lugar de 
+santiago de cali. entonces por eso se hace este diccionario para poder traducir entre el string que se muestra
+en la uui con el string que se requiere para filtrar en la bd y el dataframe. 
+"""
+geo_dict = dict(zip(geo, geo_translate))
 
 def get_mes_name(month_number):
     """Returns the Spanish name of the month given the month number (1-12)."""

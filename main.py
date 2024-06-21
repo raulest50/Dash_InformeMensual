@@ -8,13 +8,14 @@ import pandas as pd
 
 import Constants
 import methods
-from methods import getDataFrame
+from methods import getDataFrame, getDataFrame_suset
 from os.path import exists
 
-from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2, style_header1, style_header4, style_H3, style_text_bottom, style_H2
+from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2,\
+    style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label
 
 # this for production
-df = getDataFrame()
+df = getDataFrame_suset()
 df['mes_despacho'] = df['mes_despacho'].astype(int)
 
 
@@ -24,7 +25,7 @@ df['mes_despacho'] = df['mes_despacho'].astype(int)
 #     df = pd.read_csv('vmensual.csv')
 #     print("dataframe obtained locally")
 # else:
-#     df = getDataFrame()
+#     df = getDataFrame_suset()
 #     print("dataframe obtained from remote origin")
 #     df.to_csv('vmensual.csv', index=False)
 
@@ -54,17 +55,26 @@ app.layout = dbc.Container([
 
     dbc.Row([
             dbc.Col([
-                    html.Label("Seleccionar Mes:", htmlFor='month-dropdown', style={'padding': '0.2em'}),  # Add label
+                    html.Label("Seleccionar Mes:", htmlFor='month-dropdown', style=style_drop_label),  # Add label
                     dcc.Dropdown(
                         id='month-dropdown',
                         options=[{'label': f"{i:02}", 'value': f"{i:02}"} for i in range(1, 13)],
                         value='01',  # Default selected month
                         clearable=False
                     )
-                ], width=3, xl=3, lg=3, md=10, sm=10, xs=10),
+                ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                    html.Label("Seleccionar Lugar:", style=style_drop_label),  # Add label
+                    dcc.Dropdown(
+                        id='geo-dropdown',
+                        options=Constants.geo,
+                        value=Constants.geo[0],  # Default selected month
+                        clearable=False
+                    )
+                ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
             dbc.Col([
                     html.Div(),
-                ], width=9, xl=9, lg=9, md=2, sm=2, xs=2),
+                ], width=4, xl=4, lg=4, md=0, sm=0, xs=0),
         ], justify='left', align='center', style={'padding': '2em'}),
 
     dbc.Row([
@@ -142,12 +152,27 @@ app.layout = dbc.Container([
      Output('extra-table', 'columns'),
 
      ],
-    [Input('month-dropdown', 'value'), ]
+    [
+        Input('month-dropdown', 'value'),
+        Input('geo-dropdown', 'value'),
+     ]
 )
-def update_graph(mes_seleccionado):
+def update_graph(mes_seleccionado, geo_seleccionada):
     # Pivot the DataFrame to get years as columns and fuel types as rows
 
-    dfm = df[df['mes_despacho'] == int(mes_seleccionado)]
+    dfm = None
+
+    if(geo_seleccionada == Constants.geo_translate[0]):
+        g_df = df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+        dfm = g_df[g_df['mes_despacho'] == int(mes_seleccionado)].copy()
+        #print(f"geo: {geo_seleccionada}")
+        #print(f"mes: {mes_seleccionado}")
+    else:
+        #print(f"dict res: {Constants.geo_dict.get(geo_seleccionada)}")
+        dfmm = df[df['municipio'] == Constants.geo_dict.get(geo_seleccionada)].copy()
+
+        dfm = dfmm[dfmm['mes_despacho'] == int(mes_seleccionado)].copy()
+
 
     def create_figure(producto, color, plegend):
         dfc = dfm[dfm['producto'] == producto].copy()
@@ -175,7 +200,7 @@ def update_graph(mes_seleccionado):
     def create_table_data(producto):
         dfc = dfm[dfm['producto'] == producto].copy()
         dfc['volumen_total'] = dfc['volumen_total'].astype(float) / 1_000_000
-        dfc['volumen_total'] = dfc['volumen_total'].round(2)
+        dfc['volumen_total'] = dfc['volumen_total'].round(4)
         dfc['anio_despacho'] = dfc['anio_despacho'].astype(int)
         dfc = dfc.sort_values(by='anio_despacho')
 
