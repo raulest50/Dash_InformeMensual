@@ -40,17 +40,20 @@ parrafo_dt_source = """
         ciudad en específico favor contactarse con la Coordinación.
 """
 
+# seleccionar el mes actual para t'odo el texto de conclusion al final del dashboard
+current_mes = 'junio'
+
 def Gen_parrafoBottom():
 
     #mes_str = get_mes_name(mes)
 
     return f"""
-        Reporte de la variación mensual de ventas mayo 2024: 
+        Reporte de la variación mensual de ventas {current_mes} 2024 (conclusión generada el 02 de {current_mes}): 
         El informe mensual refleja que la variación relativa para gasolina corriente sigue cayendo, esta vez con una 
-        caída del 9,99% respecto al mes de mayo en 2023. Igual sucede con la variación de ACPM, la cual reporta una 
-        diferencia negativa el -1,87%. Llama la atención que en los 05 primeros meses del año 2024, 
+        caída del 9,54% respecto al mes de {current_mes} en 2023. Igual sucede con la variación de ACPM, la cual reporta 
+        una diferencia negativa el -2,57%. Llama la atención que en los 06 primeros meses del año 2024, 
         la variación en ventas en gasolina corriente, a nivel agregado, ha sido negativa en todos los meses de 2024. 
-        Las ventas de gasolina extra reportan un repunte positivo del 19,64% para el mes de mayo.
+        Las ventas de gasolina extra reportan un repunte positivo del 14,73% para el mes de {current_mes}.
         Más información contactarse a los siguientes canales: 
         """
 
@@ -121,6 +124,8 @@ style_drop_label = {
     'fontSize': '18px',
     'padding': '0.2em'
 }
+
+zdf_options = ['Incluir Zonas De Frontera', 'Sin Zonas De Frontera', 'Solo Zonas De Frontera']
 
 
 
@@ -214,4 +219,32 @@ def get_mes_name(month_number):
     }
 
     return month_names.get(month_number)
+
+
+# lista de 158 municipios que son zona de frontera.
+# en total son 171 de acuerdo a
+# https://www.datos.gov.co/Minas-y-Energ-a/Beneficio-de-estaciones-de-servicio-en-zona-de-fro/shbt-hqy9/about_data
+# .
+zdf_list = ['ABREGO', 'ACANDI', 'AGUACHICA', 'AGUSTIN CODAZZI', 'ALBAN', 'ALBANIA', 'ALDANA', 'ANCUYA', 'ARAUCA',
+            'ARAUQUITA', 'ARBOLEDA', 'BARBACOAS', 'BARRANCAS', 'BECERRIL', 'BELEN', 'BOCHALEMA', 'BOSCONIA',
+            'BUCARASICA', 'BUESACO', 'CACHIRA', 'CHACHAGUI', 'CHINACOTA', 'CHIRIGUANA', 'COLON', 'COLON', 'CONSACA',
+            'CONTADERO', 'CONVENCION', 'CORDOBA', 'CRAVO NORTE', 'CUASPUD', 'CUBARA', 'CUMARIBO', 'CUMBAL',
+            'CUMBITARA', 'CURUMANI', 'DIBULLA', 'DISTRACCION', 'DURANIA', 'EL CARMEN', 'EL CHARCO', 'EL COPEY',
+            'EL MOLINO', 'EL PASO', 'EL PEÑOL', 'EL ROSARIO', 'EL TABLON DE GOMEZ', 'EL TAMBO', 'EL TARRA', 'EL ZULIA',
+            'FONSECA', 'FORTUL', 'FRANCISCO PIZARRO', 'FUNES', 'GAMARRA', 'GUACHUCAL', 'GUAITARILLA', 'GUALMATAN',
+            'HACARI', 'HATONUEVO', 'ILES', 'IMUES', 'IPIALES', 'JURADO', 'LA CRUZ', 'LA ESPERANZA', 'LA FLORIDA',
+            'LA GLORIA', 'LA JAGUA DE IBIRICO', 'LA JAGUA DEL PILAR', 'LA LLANADA', 'LA PAZ', 'LA PEDRERA', 'LA PLAYA',
+            'LA PRIMAVERA', 'LA TOLA', 'LA UNION', 'LEIVA', 'LETICIA', 'LINARES', 'LOS ANDES', 'LOS PATIOS', 'MAGUI',
+            'MAICAO', 'MALLAMA', 'MANAURE', 'MANAURE BALCON DEL CESAR', 'MITU', 'MOCOA', 'MOSQUERA', 'NARIÑO', 'OCAÑA',
+            'OLAYA HERRERA', 'ORITO', 'OSPINA', 'PAILITAS', 'PAMPLONA', 'PASTO', 'PELAYA', 'POLICARPA', 'POTOSI',
+            'PROVIDENCIA', 'PUERRES', 'PUERTO ASIS', 'PUERTO CAICEDO', 'PUERTO CARREÑO', 'PUERTO GUZMAN',
+            'PUERTO LEGUIZAMO', 'PUERTO RONDON', 'PUPIALES', 'RAGONVALIA', 'RICAURTE', 'RIO DE ORO', 'RIOHACHA',
+            'RIOSUCIO', 'ROBERTO PAYAN', 'SAMANIEGO', 'SAN ALBERTO', 'SAN ANDRES', 'SAN ANDRES DE TUMACO',
+            'SAN BERNARDO', 'SAN CALIXTO', 'SAN CAYETANO', 'SAN DIEGO', 'SANDONA', 'SAN FRANCISCO',
+            'SAN JOSE DE CUCUTA', 'SAN JUAN DEL CESAR', 'SAN LORENZO', 'SAN MARTIN', 'SAN MIGUEL', 'SAN PABLO',
+            'SAN PEDRO DE CARTAGO', 'SANTA BARBARA', 'SANTACRUZ', 'SANTIAGO', 'SAPUYES', 'SARAVENA', 'SARDINATA',
+            'SIBUNDOY', 'TAME', 'TAMINANGO', 'TANGUA', 'TARAIRA', 'TEORAMA', 'TIBU', 'TOLEDO', 'TUQUERRES', 'UNGUIA',
+            'URIBIA', 'URUMITA', 'VALLE DEL GUAMUEZ', 'VALLEDUPAR', 'VILLA DEL ROSARIO', 'VILLAGARZON', 'VILLANUEVA',
+            'YACUANQUER', 'INIRIDA']
+
 

@@ -40,6 +40,7 @@ def getDataFrame():
             print("time out exception")
             not_success = True
 
+"""dataframe superset"""
 def getDataFrame_suset():
     cliente = Socrata("www.datos.gov.co", None, timeout=10)
 
@@ -62,3 +63,7 @@ def getDataFrame_suset():
         except requests.exceptions.Timeout:
             print("time out exception")
             not_success = True
+
+
+def format_zdf_list(zdf_list, n=10):
+    return '\n'.join(', '.join(zdf_list[i:i + n]) for i in range(0, len(zdf_list), n))

@@ -1,6 +1,6 @@
 import dash
 from dash import dcc, html, dash_table
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import plotly.express as px
 import dash_bootstrap_components as dbc
 
@@ -8,36 +8,38 @@ import pandas as pd
 
 import Constants
 import methods
-from methods import getDataFrame, getDataFrame_suset
+from methods import getDataFrame, getDataFrame_suset, format_zdf_list
 from os.path import exists
 
 from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2,\
-    style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label
+    style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, zdf_options
 
 # this for production
-# df = getDataFrame_suset()
-# df['mes_despacho'] = df['mes_despacho'].astype(int)
+df = getDataFrame_suset()
+df['mes_despacho'] = df['mes_despacho'].astype(int)
 
 
 #this piece of code only for debuging
-df = None
-if(exists('./vmensual.csv')):
-    df = pd.read_csv('vmensual.csv')
-    print("dataframe obtained locally")
-else:
-    df = getDataFrame_suset()
-    print("dataframe obtained from remote origin")
-    df.to_csv('vmensual.csv', index=False)
+# df = None
+# if(exists('./vmensual.csv')):
+#     df = pd.read_csv('vmensual.csv')
+#     print("dataframe obtained locally")
+# else:
+#     df = getDataFrame_suset()
+#     print("dataframe obtained from remote origin")
+#     df.to_csv('vmensual.csv', index=False)
 
 
 # Initialize the Dash app with Bootstrap stylesheet
 app = dash.Dash(__name__, external_stylesheets=[
     dbc.themes.BOOTSTRAP,
-    "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap"
+    "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap",
+    dbc.icons.BOOTSTRAP,  # para usar bootstrap icons
 ])
 
 # Define the layout of the app
 app.layout = dbc.Container([
+    #dcc.Store(id='zdf-dropdown-visible', data=True),
     dbc.Row([
         dbc.Col([
             html.H1(" Reporte Mensual Ventas Combustible Liquido", style=style_header1)
@@ -72,10 +74,24 @@ app.layout = dbc.Container([
                         clearable=False
                     )
                 ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+
+            dbc.Col([
+                html.Label("Zona de Frontera:", htmlFor='zdf-dropdown', style=style_drop_label, id='zdf-label'),
+                dcc.Dropdown(
+                    id='zdf-dropdown',
+                    options=zdf_options,
+                    value=zdf_options[0],
+                    clearable=False,
+                )
+            ], width=3, xl=3, lg=3, md=8, sm=8, xs=8, id='extra-dropdown-col', style={'display': 'block'} ),
+            dbc.Col([
+                dbc.Button([html.I(className="bi bi-patch-question-fill me-2"),  "Info"], id="zdf-info-button", color="primary", className="ml-2", style={'padding': '1em'})
+                    ], width=1, xl=1, lg=1, md=4, sm=4, xs=4, style={'display': 'block', 'height': '100%'},),
             dbc.Col([
                     html.Div(),
-                ], width=4, xl=4, lg=4, md=0, sm=0, xs=0),
-        ], justify='left', align='center', style={'padding': '2em'}),
+                    ], width=0, xl=0, lg=0, md=0, sm=0, xs=0),
+            ], justify='left', align='center', style={'padding': '2em'}
+            ),
 
     dbc.Row([
         dbc.Col([
@@ -115,10 +131,10 @@ app.layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.H2("RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS MAYO 2024", style=style_H2),
+            html.H2(f"RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS {Constants.current_mes.upper()} 2024", style=style_H2),
             html.H3("Información sobre la fuente de datos.", style=style_H3),
             html.P(Constants.parrafo_dt_source, style=style_text_bottom),
-            html.H3("Reporte de la variación mensual de ventas MAYO 2024:", style=style_H3),
+            html.H3(f"Reporte de la variación mensual de ventas {Constants.current_mes.upper()} 2024:", style=style_H3),
             html.P(Constants.Gen_parrafoBottom(), style=style_text_bottom),
         ])
     ], style={'padding': '2em'}),
@@ -134,9 +150,35 @@ app.layout = dbc.Container([
             html.P(Constants.correo_juan, style=style_text_bottom),
             html.P(Constants.cel_juan, style=style_text_bottom),
         ], width=6)
-    ], style={'padding': '2em'})
+    ], style={'padding': '2em'}),
+
+
+    # Define the modal
+    dbc.Modal(
+        [
+            dbc.ModalHeader(dbc.ModalTitle("Información sobre ZDF")),
+            dbc.ModalBody(f"Los 158 municipios tenidos en cuenta como zonas de frontera en esta aplicación: \n {format_zdf_list(Constants.zdf_list, 10)} \n"
+                          f" hay 2 COLON en departamentos diferentes "),
+            dbc.ModalFooter(
+                dbc.Button("Close", id="close-modal", className="ml-auto")
+            ),
+        ],
+        id="info-modal",
+        is_open=False,
+    ),
 
 ], fluid=True)
+
+
+@app.callback(
+    Output("info-modal", "is_open"),
+    [Input("zdf-info-button", "n_clicks"), Input("close-modal", "n_clicks")],
+    [State("info-modal", "is_open")],
+)
+def toggle_modal(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
 
 
 @app.callback(
@@ -150,27 +192,58 @@ app.layout = dbc.Container([
      Output('acpm-table', 'columns'),
      Output('extra-table', 'data'),
      Output('extra-table', 'columns'),
+     Output(component_id='zdf-dropdown', component_property='style'),
+     Output(component_id='zdf-label', component_property='style'),# toggle zdf dropdown visibility
+     Output(component_id='zdf-info-button', component_property='style')
 
      ],
     [
         Input('month-dropdown', 'value'),
         Input('geo-dropdown', 'value'),
+        Input('zdf-dropdown', 'value'),
      ]
 )
-def update_graph(mes_seleccionado, geo_seleccionada):
+def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
     # Pivot the DataFrame to get years as columns and fuel types as rows
 
     dfm = None
 
-    if(geo_seleccionada == Constants.geo_translate[0]):
-        g_df = df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
-        dfm = g_df[g_df['mes_despacho'] == int(mes_seleccionado)].copy()
+    if geo_seleccionada == Constants.geo_translate[0]: # informe t'odo el pais
+        dropdown_visible = {'display': ''}
+        label_visible = Constants.style_drop_label
+        button_visible = {'display': ''}
+
+        if zdf_opt_sleeccionada == zdf_options[0]:  # el pais entero inclyendo zonas de frontera
+            g_df = df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+            dfm = g_df[g_df['mes_despacho'] == int(mes_seleccionado)].copy()
+            # print('con')
+            pass
+        if zdf_opt_sleeccionada == zdf_options[1]:  # el pais entero sin zonas de frontera
+            filtered_df = df[~df['municipio'].isin(Constants.zdf_list)]
+            filtered_df = filtered_df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+            g_df = filtered_df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+            dfm = g_df[g_df['mes_despacho'] == int(mes_seleccionado)].copy()
+
+            # print('sin')
+            pass
+        if zdf_opt_sleeccionada == zdf_options[2]:  # solo las zonas de frontera
+            filtered_df = df[df['municipio'].isin(Constants.zdf_list)]
+            filtered_df = filtered_df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+            g_df = filtered_df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+            dfm = g_df[g_df['mes_despacho'] == int(mes_seleccionado)].copy()
+
+            # print('solo')
+            pass
+
         #print(f"geo: {geo_seleccionada}")
         #print(f"mes: {mes_seleccionado}")
-    else:
+    else:  # informe para un municipio especifico
         #print(f"dict res: {Constants.geo_dict.get(geo_seleccionada)}")
         dfmm = df[df['municipio'] == Constants.geo_dict.get(geo_seleccionada)].copy()
         dfm = dfmm[dfmm['mes_despacho'] == int(mes_seleccionado)].copy()
+        dropdown_visible = {'display': 'none'}
+        label_visible = {'display': 'none'}
+        button_visible = {'display': 'none'}
 
 
     def create_figure(producto, color, plegend):
@@ -226,7 +299,8 @@ def update_graph(mes_seleccionado, geo_seleccionada):
     return (fig_corriente, fig_acpm, fig_extra,
             corriente_table_data, corriente_table_columns,
             acpm_table_data, acpm_table_columns,
-            extra_table_data, extra_table_columns)
+            extra_table_data, extra_table_columns,
+            dropdown_visible, label_visible, button_visible)
 
 # Run the app
 if __name__ == '__main__':
