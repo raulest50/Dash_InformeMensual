@@ -14,12 +14,15 @@ from os.path import exists
 from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2,\
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, zdf_options
 
+## *********
+## SE DEJA SOLO POR REFERENCIA PERO YA NO SE CAMBIA MAS
 # this for production
 # df = getDataFrame_suset()
 # df['mes_despacho'] = df['mes_despacho'].astype(int)
 
 
 #this piece of code only for debuging
+## SE DEJA TAMBIEN PARA PRODUCCION
 df = None
 if(exists('./vmensual.csv')):
     df = pd.read_csv('vmensual.csv')
@@ -157,8 +160,9 @@ app.layout = dbc.Container([
     dbc.Modal(
         [
             dbc.ModalHeader(dbc.ModalTitle("Información sobre ZDF")),
-            dbc.ModalBody(f"Los 158 municipios tenidos en cuenta como zonas de frontera en esta aplicación: \n {format_zdf_list(Constants.zdf_list, 10)} \n"
-                          f" hay 2 COLON en departamentos diferentes "),
+            dbc.ModalBody(f"Los 158 municipios tenidos en cuenta como zonas de frontera"
+                          f" en esta aplicación (hay 2 COLON en departamentos diferentes): \n"
+                          f" {format_zdf_list(Constants.zdf_list, 10)} \n"),
             dbc.ModalFooter(
                 dbc.Button("Close", id="close-modal", className="ml-auto")
             ),

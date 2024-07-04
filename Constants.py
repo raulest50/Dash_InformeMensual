@@ -48,7 +48,7 @@ def Gen_parrafoBottom():
     #mes_str = get_mes_name(mes)
 
     return f"""
-        Reporte de la variación mensual de ventas {current_mes} 2024 (conclusión generada el 02 de {current_mes}): 
+        Reporte mensual de la variación de ventas {current_mes} 2024 (conclusión generada el 02 de {current_mes}): 
         El informe mensual refleja que la variación relativa para gasolina corriente sigue cayendo, esta vez con una 
         caída del 9,54% respecto al mes de {current_mes} en 2023. Igual sucede con la variación de ACPM, la cual reporta 
         una diferencia negativa el -2,57%. Llama la atención que en los 06 primeros meses del año 2024, 
