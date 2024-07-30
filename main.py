@@ -14,6 +14,9 @@ from os.path import exists
 from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2,\
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, zdf_options
 
+# Import the new page layout
+from Pages.precios_layout import precios_layout
+
 ## *********
 ## SE DEJA SOLO POR REFERENCIA PERO YA NO SE CAMBIA MAS
 # this for production
@@ -38,10 +41,15 @@ app = dash.Dash(__name__, external_stylesheets=[
     dbc.themes.BOOTSTRAP,
     "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap",
     dbc.icons.BOOTSTRAP,  # para usar bootstrap icons
+], suppress_callback_exceptions=True)
+
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    html.Div(id='page-content')
 ])
 
 # Define the layout of the app
-app.layout = dbc.Container([
+index_page = dbc.Container([
     #dcc.Store(id='zdf-dropdown-visible', data=True),
     dbc.Row([
         dbc.Col([
@@ -148,12 +156,18 @@ app.layout = dbc.Container([
             html.P(Constants.correo_esteban, style=style_text_bottom),
             html.P(Constants.cel_esteban, style=style_text_bottom),
         ], width=6),
-    dbc.Col([
-            html.P("Juan David Bonilla", style=style_text_bottom),
-            html.P(Constants.correo_juan, style=style_text_bottom),
-            html.P(Constants.cel_juan, style=style_text_bottom),
+        dbc.Col([
+                html.P("Juan David Bonilla", style=style_text_bottom),
+                html.P(Constants.correo_juan, style=style_text_bottom),
+                html.P(Constants.cel_juan, style=style_text_bottom),
         ], width=6)
     ], style={'padding': '2em'}),
+
+    dbc.Row([
+            dbc.Col([
+                dbc.Button("Ir a Precios de Referencia", id="navigate-button", color="primary", href="/precios_referencia", style={'marginTop': '2em'})
+            ], width=12, style={'textAlign': 'center'})
+        ], style={'padding': '2em'}),
 
 
     # Define the modal
@@ -172,6 +186,17 @@ app.layout = dbc.Container([
     ),
 
 ], fluid=True)
+
+
+@app.callback(
+    Output('page-content', 'children'),
+    [Input('url', 'pathname')]
+)
+def display_page(pathname):
+    if pathname == '/precios_referencia':
+        return precios_layout
+    else:
+        return index_page
 
 
 @app.callback(
