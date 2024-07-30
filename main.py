@@ -42,6 +42,7 @@ app = dash.Dash(__name__, external_stylesheets=[
     "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap",
     dbc.icons.BOOTSTRAP,  # para usar bootstrap icons
 ], suppress_callback_exceptions=True)
+app.config.suppress_callback_exceptions = True
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -333,5 +334,5 @@ def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
 
 # Run the app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8050, debug=True)
+    app.run(host='0.0.0.0', port=8050, debug=True, dev_tools_ui=False)
     #app.run_server(debug=True)
