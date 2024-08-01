@@ -1,21 +1,25 @@
-import dash
-from dash import dcc, html, dash_table
-from dash.dependencies import Input, Output, State
-import plotly.express as px
-import dash_bootstrap_components as dbc
 
-import pandas as pd
+import dash
+from dash import dcc, html, dash_table, callback
+import dash_bootstrap_components as dbc
+import plotly.express as px
 
 import Constants
-import methods
-from methods import getDataFrame, getDataFrame_suset, format_zdf_list
+
 from os.path import exists
 
 from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2,\
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, zdf_options
 
-# Import the new page layout
-from Pages.precios_layout import precios_layout
+from dash.dependencies import Input, Output, State
+import pandas as pd
+
+import methods
+from methods import format_zdf_list, getDataFrame_suset
+
+
+
+
 
 ## *********
 ## SE DEJA SOLO POR REFERENCIA PERO YA NO SE CAMBIA MAS
@@ -29,28 +33,20 @@ from Pages.precios_layout import precios_layout
 df = None
 if(exists('./vmensual.csv')):
     df = pd.read_csv('vmensual.csv')
-    print("dataframe obtained locally")
+    #print("dataframe obtained locally")
 else:
     df = getDataFrame_suset()
-    print("dataframe obtained from remote origin")
+    #print("dataframe obtained from remote origin")
     df.to_csv('vmensual.csv', index=False)
 
 
-# Initialize the Dash app with Bootstrap stylesheet
-app = dash.Dash(__name__, external_stylesheets=[
-    dbc.themes.BOOTSTRAP,
-    "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap",
-    dbc.icons.BOOTSTRAP,  # para usar bootstrap icons
-], suppress_callback_exceptions=True)
-app.config.suppress_callback_exceptions = True
 
-app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),
-    html.Div(id='page-content')
-])
 
-# Define the layout of the app
-index_page = dbc.Container([
+
+
+dash.register_page(__name__, path='/')
+
+layout = dbc.Container([
     #dcc.Store(id='zdf-dropdown-visible', data=True),
     dbc.Row([
         dbc.Col([
@@ -164,12 +160,6 @@ index_page = dbc.Container([
         ], width=6)
     ], style={'padding': '2em'}),
 
-    dbc.Row([
-            dbc.Col([
-                dbc.Button("Ir a Precios de Referencia", id="navigate-button", color="primary", href="/precios_referencia", style={'marginTop': '2em'})
-            ], width=12, style={'textAlign': 'center'})
-        ], style={'padding': '2em'}),
-
 
     # Define the modal
     dbc.Modal(
@@ -189,18 +179,8 @@ index_page = dbc.Container([
 ], fluid=True)
 
 
-@app.callback(
-    Output('page-content', 'children'),
-    [Input('url', 'pathname')]
-)
-def display_page(pathname):
-    if pathname == '/precios_referencia':
-        return precios_layout
-    else:
-        return index_page
 
-
-@app.callback(
+@callback(
     Output("info-modal", "is_open"),
     [Input("zdf-info-button", "n_clicks"), Input("close-modal", "n_clicks")],
     [State("info-modal", "is_open")],
@@ -211,7 +191,7 @@ def toggle_modal(n1, n2, is_open):
     return is_open
 
 
-@app.callback(
+@callback(
     [Output('corriente', 'figure'),
      Output('acpm', 'figure'),
      Output('extra', 'figure'),
@@ -223,7 +203,7 @@ def toggle_modal(n1, n2, is_open):
      Output('extra-table', 'data'),
      Output('extra-table', 'columns'),
      Output(component_id='zdf-dropdown', component_property='style'),
-     Output(component_id='zdf-label', component_property='style'),# toggle zdf dropdown visibility
+     Output(component_id='zdf-label', component_property='style'), # toggle zdf dropdown visibility
      Output(component_id='zdf-info-button', component_property='style')
 
      ],
@@ -332,7 +312,7 @@ def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
             extra_table_data, extra_table_columns,
             dropdown_visible, label_visible, button_visible)
 
-# Run the app
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8050, debug=True, dev_tools_ui=False)
-    #app.run_server(debug=True)
+
+
+
+

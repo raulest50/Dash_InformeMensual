@@ -125,6 +125,30 @@ style_drop_label = {
     'padding': '0.2em'
 }
 
+
+
+style_navbar = {
+    'padding': '0.5em',
+    'margin': '0.2em',
+    'paddingTop': '1em',
+    'paddingBottom': '1em',
+    'backgroundColor': f'{verde}'
+}
+
+
+style_navbar_col = {
+    'fontFamily': "'Plus Jakarta Sans', sans-serif",
+    'fontSize': '1.2em',
+    'textAlign': 'justify'
+}
+
+style_navbar_link = {
+    'color': 'black',
+    'marginTop': '0.5em',
+    'marginBottom': '0.5em',
+}
+
+
 zdf_options = ['Incluir Zonas De Frontera', 'Sin Zonas De Frontera', 'Solo Zonas De Frontera']
 
 
