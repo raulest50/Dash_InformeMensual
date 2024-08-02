@@ -1,11 +1,14 @@
 
 import dash
+import pandas as pd
 from dash import dcc, html, dash_table, callback, Output, Input
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
 import pickle
 from os.path import exists
+
+import plotly.express as px
 
 from Constants import style_header1, style_text_bottom, style_drop_label, style_header4,\
 style_cell, style_header, style_data, style_table
@@ -123,7 +126,31 @@ layout = dbc.Container([
         style={'padding': '2em'}
     ),
 
+
+    dbc.Row([
+            dbc.Col([
+                html.H4("Tabla Agregada - Corriente", style=style_header4),
+                dash_table.DataTable(id='corriente-aggr-table',
+                                     style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
+                                     )
+            ], width=6, xl=6, lg=6, md=12, sm=12, xs=12),
+            dbc.Col([
+                        dcc.Graph(id='pie-chart')
+                    ], width=6, xl=6, lg=6, md=12, sm=12, xs=12),
+            ],
+            style={'padding': '2em'}
+        ),
+
 ], fluid=True)
+
+
+def sum_cells_dt_frame(df, row_indices):
+    # Ensure the DataFrame's second column is numeric
+    ciudad_name = df.columns[1]
+    df[ciudad_name] = pd.to_numeric(df[ciudad_name], errors='coerce')
+    # Select the rows based on the given indices and sum the values in the second column
+    selected_sum = df.iloc[row_indices, 1].sum()
+    return selected_sum
 
 
 
@@ -134,7 +161,11 @@ layout = dbc.Container([
         Output('corriente-precios-table', 'style_data_conditional'),
         Output('acpm-precios-table', 'data'),
         Output('acpm-precios-table', 'columns'),
-        Output('acpm-precios-table', 'style_data_conditional')
+        Output('acpm-precios-table', 'style_data_conditional'),
+        Output('corriente-aggr-table', 'data'),
+        Output('corriente-aggr-table', 'columns'),
+        Output('corriente-aggr-table', 'style_data_conditional'),
+        Output('pie-chart', 'figure')
     ],
     [
         Input('mes-informe-dropdown', 'value'),
@@ -175,6 +206,43 @@ def update_precios_ref(informe_name, ciudad_name):
         {"name": "CIUDAD", "id": "CIUDAD"},
         {"name": ciudad_name, "id": ciudad_name},
     ]
-    return corriente_data, t_columns, style_data_conditional, acpm_data, t_columns, style_data_conditional
+
+    data = {
+        'CIUDAD': ["INGRESO AL PRODUCTOR", "CARGA IMPOSITIVA", "TRANSPORTE", "MARGEN MAYORISTA", "MARGEN MINORISTA", "OTROS COSTOS", "PRECIO MAXIMO DE VENTA POR GALON INCLUIDA SOBRETASA"],
+        ciudad_name:
+            [
+                df_precios_table_corriente.iloc[1, 1],
+                sum_cells_dt_frame(df_precios_table_corriente, [2, 3, 4, 11, 12]),
+                sum_cells_dt_frame(df_precios_table_corriente, [6, 7, 16]),
+                df_precios_table_corriente.iloc[10, 1],
+                df_precios_table_corriente.iloc[14, 1],
+                sum_cells_dt_frame(df_precios_table_corriente, [5, 15]),
+                df_precios_table_corriente.iloc[17, 1],
+            ]
+    }
+
+
+    df_aggr_corriente = pd.DataFrame(data=data, columns=['CIUDAD', ciudad_name])
+
+    df_aggr_corriente[ciudad_name] = df_aggr_corriente[ciudad_name].apply(
+        lambda x: f"{x:.2f}" if isinstance(x, (int, float)) and not np.isnan(x) else x
+    )
+
+    aggr_table_data = df_aggr_corriente.to_dict('records')
+
+    style_data_conditional_aggr = [
+        {
+            'if': {
+                'filter_query': '{CIUDAD} = "INGRESO AL PRODUCTOR" || {CIUDAD} = "PRECIO MAXIMO DE VENTA POR GALON INCLUIDA SOBRETASA"'
+            },
+            'fontWeight': 'bold',
+            'backgroundColor': 'rgb(232, 232, 232)',
+        }
+    ]
+
+
+    fig = px.pie(df_aggr_corriente[:-1], names='CIUDAD', values=ciudad_name, title=f'PRECIOS DE REFERENCIA {ciudad_name}')
+
+    return corriente_data, t_columns, style_data_conditional, acpm_data, t_columns, style_data_conditional, aggr_table_data, t_columns, style_data_conditional_aggr, fig
 
 
