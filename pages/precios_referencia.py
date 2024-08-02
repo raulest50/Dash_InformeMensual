@@ -5,6 +5,8 @@ from dash import dcc, html, dash_table, callback, Output, Input
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
+import Constants
+
 import pickle
 from os.path import exists
 
@@ -79,7 +81,7 @@ layout = dbc.Container([
 
     dbc.Row([
             dbc.Col([
-                html.P("Parrafo pagina precios referencia", style=style_text_bottom)
+                html.P("A continuación puede consultar la estructura de precios de referencia de la UPME para las principales ciudades del país:", style=style_text_bottom)
             ], width=12)
         ], style={'padding': '2em'}),
 
@@ -140,6 +142,27 @@ layout = dbc.Container([
             ],
             style={'padding': '2em'}
         ),
+
+
+    dbc.Row([
+            dbc.Col([
+                html.P("Elaborado por la Coordinación de Regulación y Análisis del Sector con datos de la Unidad de Planeación Minero Energética (UPME)", style=style_text_bottom)
+            ], width=12)
+    ], style={'padding': '2em'}),
+
+
+    dbc.Row([
+            dbc.Col([
+                html.P("Raul Esteban Alzate", style=style_text_bottom),
+                html.P(Constants.correo_esteban, style=style_text_bottom),
+                html.P(Constants.cel_esteban, style=style_text_bottom),
+            ], width=6),
+            dbc.Col([
+                    html.P("Juan David Bonilla", style=style_text_bottom),
+                    html.P(Constants.correo_juan, style=style_text_bottom),
+                    html.P(Constants.cel_juan, style=style_text_bottom),
+            ], width=6)
+        ], style={'padding': '2em'}),
 
 ], fluid=True)
 
