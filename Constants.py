@@ -41,7 +41,7 @@ parrafo_dt_source = """
 """
 
 # seleccionar el mes actual para t'odo el texto de conclusion al final del dashboard
-current_mes = 'julio'
+current_mes = 'agosto'
 
 def Gen_parrafoBottom():
 
@@ -50,10 +50,10 @@ def Gen_parrafoBottom():
     return f"""
         Reporte mensual de la variación de ventas {current_mes} 2024 (conclusión generada el 01 de {current_mes}): 
         El informe mensual refleja que la variación relativa para gasolina corriente sigue cayendo, esta vez con una 
-        caída del 8,77% respecto al mes de {current_mes} en 2023. Por el contrario para ACPM se reporta 
-        una diferencia positiva de 3,73%. Llama la atención que en los 07 primeros meses del año 2024, 
+        caída del 4,9% respecto al mes de {current_mes} en 2023. Por el contrario para ACPM se reporta 
+        una diferencia positiva de 3,26%. Llama la atención que en los 08 primeros meses del año 2024, 
         la variación en ventas en gasolina corriente, a nivel agregado, ha sido negativa en todos los meses de 2024. 
-        Las ventas de gasolina extra reportan un repunte positivo del 25,38% para el mes de {current_mes}.
+        Las ventas de gasolina extra reportan un repunte positivo del 25,19% para el mes de {current_mes}.
         Más información contactarse a los siguientes canales: 
         """
 
