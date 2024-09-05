@@ -4,6 +4,8 @@ from sodapy import Socrata
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from datetime import datetime, timedelta
+
 p1 = "CORRIENTE"
 p2 = "DIESEL"
 p3 = "EXTRA"
@@ -131,3 +133,30 @@ def excel_file_precios_to_dframe(excel_file, skip, rows, columns):
     return df_corriente
 
 
+def getDataFrame_OnlineReport():
+
+    # Get today's date and 60 days before
+    today = datetime.today().strftime('%Y-%m-%d')
+    sixty_days_ago = (datetime.today() - timedelta(days=60)).strftime('%Y-%m-%d')
+
+    cliente = Socrata("www.datos.gov.co", None, timeout=10)
+
+    not_success = True
+    while not_success:
+        try:
+            query = (
+                f"SELECT SUM(volumen_despachado) as volumen_total, producto, fecha_despacho "
+                f"WHERE subtipo_comprador IN ('{c1}', '{c2}', '{c3}') "
+                f"AND producto IN ('{p1}', '{p2}', '{p3}') "
+                f"AND fecha_despacho BETWEEN '{sixty_days_ago}' AND '{today}' "
+                f"GROUP BY producto, fecha_despacho "
+                f"ORDER BY fecha_despacho ASC "
+                f"LIMIT 20000 "
+            )
+
+            results = cliente.get("339g-zjac", query=query)
+            df = pd.DataFrame.from_records(results)
+            return df
+        except requests.exceptions.Timeout:
+            print("time out exception - get dtframe online report")
+            not_success = True
