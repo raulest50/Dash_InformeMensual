@@ -8,6 +8,7 @@ from Constants import style_header1, style_text_bottom, style_drop_label, style_
 style_cell, style_header, style_data, style_table
 
 import datetime
+import pytz
 
 import plotly.express as px
 
@@ -21,8 +22,12 @@ def create_timeline_plot(df, titulo, color):
                   title=f" {titulo} ",
                   markers=True,
                   color_discrete_sequence=[color],
-                  labels={"value": "Volumen Total", "variable": "Año"}
+                  labels={"volumen_total": "Volumen Total", "fecha_despacho": "Fecha"}
                   )
+    fig.update_layout(
+        xaxis_title="Fecha",
+        yaxis_title="Volumen Total (gal)"
+    )
     return fig
 
 dash.register_page(__name__)
@@ -42,9 +47,11 @@ layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.P("Se muestra el despacho de combustible a nivel nacional "
+            html.P("Se muestra el despacho de combustible, a nivel nacional dia por dia, "
                    "dentro de una ventana de 60 dias de acuerdo a la informacion "
-                   "reportada por el cubo de SICOM. Las cifras se actualizan cada hora.", style=style_text_bottom)
+                   "reportada por el cubo de SICOM. Solo se tienen en cuenta los agentes: "
+                   "COMERCIALIZADOR INDUSTRIAL, ESTACION DE SERVICIO AUTOMOTRIZ y ESTACION DE SERVICIO FLUVIAL"
+                   ".Las cifras se actualizan cada 15 minutos.", style=style_text_bottom)
         ], width=12)
     ], style={'padding': '2em'}),
 
@@ -100,7 +107,9 @@ def update_graphs(n):
     fig2 = create_timeline_plot(df_acpm, 'ACPM', 'green')
     fig3 = create_timeline_plot(df_extra, 'Extra', 'gray')
 
-    last_updated = datetime.datetime.now().strftime('fecha:  %Y-%m-%d    hora:  %H:%M:%S')
+    tz = pytz.timezone('America/Bogota')
+    now = datetime.datetime.now(tz)
+    last_updated = now.strftime('fecha:  %Y-%m-%d    hora:  %H:%M:%S')
 
     #intervalo = (3600/4)*1000
 
