@@ -64,15 +64,21 @@ layout = dbc.Container([
     ], style={'padding': '2em'}),
 
     dbc.Row([
-        dbc.Col([dcc.Graph(id='corriente-60win')], width=12)
+        dbc.Col([dcc.Graph(id='corriente-60win')], width=12),
+        dbc.Col([html.Button("Download Corriente CSV", id='btn-csv-corriente'),
+                 dcc.Download(id="download-csv-corriente")], width=12)
     ], style={}),
 
     dbc.Row([
-        dbc.Col([dcc.Graph(id='acpm-60win')], width=12)
+        dbc.Col([dcc.Graph(id='acpm-60win')], width=12),
+        dbc.Col([html.Button("Download ACPM CSV", id='btn-csv-acpm'),
+                 dcc.Download(id="download-csv-acpm")], width=12)
     ], style={}),
 
     dbc.Row([
-        dbc.Col([dcc.Graph(id='extra-60win')], width=12)
+        dbc.Col([dcc.Graph(id='extra-60win')], width=12),
+        dbc.Col([html.Button("Download Extra CSV", id='btn-csv-extra'),
+                 dcc.Download(id="download-csv-extra")], width=12)
     ], style={}),
 
     dcc.Interval(id='interval-component', interval=(3600/4)*1000, n_intervals=0)
@@ -111,8 +117,51 @@ def update_graphs(n):
     now = datetime.datetime.now(tz)
     last_updated = now.strftime('fecha:  %Y-%m-%d    hora:  %H:%M:%S')
 
-    #intervalo = (3600/4)*1000
+    df_corriente.to_csv('or_corriente.csv', index=False)
+    df_acpm.to_csv('or_acpm.csv', index=False)
+    df_extra.to_csv('or_extra.csv', index=False)
 
     return fig1, fig2, fig3, last_updated, #intervalo
+
+
+@callback(
+    Output('download-csv-corriente', 'data'),
+    Input('btn-csv-corriente', 'n_clicks'),
+    prevent_initial_call=True
+)
+def download_csv_corriente(n_clicks):
+    #df = methods.getDataFrame_OnlineReport()  # Function that fetches/updates the DataFrame
+    df = pd.read_csv('or_corriente.csv')
+    df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
+    df['volumen_total'] = df['volumen_total'].astype(float)
+    df_corriente = df[df['producto'] == methods.p1].copy()
+    return dcc.send_data_frame(df_corriente.to_csv, "corriente.csv")
+
+
+@callback(
+    Output('download-csv-acpm', 'data'),
+    Input('btn-csv-acpm', 'n_clicks'),
+    prevent_initial_call=True
+)
+def download_csv_acpm(n_clicks):
+    #df = methods.getDataFrame_OnlineReport()  # Function that fetches/updates the DataFrame
+    df = pd.read_csv('or_acpm.csv')
+    df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
+    df['volumen_total'] = df['volumen_total'].astype(float)
+    df_acpm = df[df['producto'] == methods.p2].copy()
+    return dcc.send_data_frame(df_acpm.to_csv, "acpm.csv")
+
+@callback(
+    Output('download-csv-extra', 'data'),
+    Input('btn-csv-extra', 'n_clicks'),
+    prevent_initial_call=True
+)
+def download_csv_extra(n_clicks):
+    #df = methods.getDataFrame_OnlineReport()  # Function that fetches/updates the DataFrame
+    df = pd.read_csv('or_extra.csv')
+    df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
+    df['volumen_total'] = df['volumen_total'].astype(float)
+    df_extra = df[df['producto'] == methods.p3].copy()
+    return dcc.send_data_frame(df_extra.to_csv, "extra.csv")
 
 
