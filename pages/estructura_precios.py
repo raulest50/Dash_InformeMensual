@@ -72,7 +72,7 @@ dash.register_page(__name__)
 layout = dbc.Container([
     dbc.Row([
             dbc.Col([
-                html.H1(" Precios de Referencia Combustibles Liquidos ", style=style_header1)
+                html.H1(" Estructura de Precios Combustibles Liquidos ", style=style_header1)
             ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
             dbc.Col([
                 html.Img(src='../assets/logoComce-Soldicom.png', style={'width': '100%', 'height': 'auto'}),
@@ -114,13 +114,13 @@ layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.H4("Precios de Referencia - Corriente", style=style_header4),
+            html.H4("Estructura de Precios - Corriente", style=style_header4),
             dash_table.DataTable(id='corriente-precios-table',
                                  style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
                                  )
         ], width=6, xl=6, lg=6, md=12, sm=12, xs=12),
         dbc.Col([
-            html.H4("Precios de Referencia - ACPM", style=style_header4),
+            html.H4("Estructura de Precios - ACPM", style=style_header4),
             dash_table.DataTable(id='acpm-precios-table',
                                  style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
                                  )
@@ -264,7 +264,7 @@ def update_precios_ref(informe_name, ciudad_name):
     ]
 
 
-    fig = px.pie(df_aggr_corriente[:-1], names='CIUDAD', values=ciudad_name, title=f'PRECIOS DE REFERENCIA {ciudad_name}')
+    fig = px.pie(df_aggr_corriente[:-1], names='CIUDAD', values=ciudad_name, title=f'ESTRUCTURA DE PRECIOS {ciudad_name}')
 
     return corriente_data, t_columns, style_data_conditional, acpm_data, t_columns, style_data_conditional, aggr_table_data, t_columns, style_data_conditional_aggr, fig
 
