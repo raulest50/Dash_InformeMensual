@@ -139,6 +139,24 @@ layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
+            dcc.Graph(id='corriente_full_tseries', style=style_graph)
+        ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
+    ], style={'padding': '2em'}),
+
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id='acpm_full_tseries', style=style_graph)
+        ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
+    ], style={'padding': '2em'}),
+
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id='extra_full_tseries', style=style_graph)
+        ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
+    ], style={'padding': '2em'}),
+
+    dbc.Row([
+        dbc.Col([
             html.H2(f"RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS {Constants.current_mes.upper()} 2024", style=style_H2),
             html.H3("Información sobre la fuente de datos.", style=style_H3),
             html.P(Constants.parrafo_dt_source, style=style_text_bottom),
@@ -204,7 +222,10 @@ def toggle_modal(n1, n2, is_open):
      Output('extra-table', 'columns'),
      Output(component_id='zdf-dropdown', component_property='style'),
      Output(component_id='zdf-label', component_property='style'), # toggle zdf dropdown visibility
-     Output(component_id='zdf-info-button', component_property='style')
+     Output(component_id='zdf-info-button', component_property='style'),
+     Output(component_id='corriente_full_tseries', component_property='figure'),
+     Output(component_id='acpm_full_tseries', component_property='figure'),
+     Output(component_id='extra_full_tseries', component_property='figure')
 
      ],
     [
@@ -279,6 +300,35 @@ def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
         # Return the figure to be displayed in the graph
         return fig
 
+    def create_figure_fts(producto, color, plegend):
+        dfg = df.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+        dfg['fecha_despacho'] = pd.to_datetime(
+            dfg['anio_despacho'].astype(str) + '-' + dfg['mes_despacho'].astype(str) + '-01')
+
+        last_month = dfg['fecha_despacho'].max()
+        dfg = dfg[dfg['fecha_despacho'] < last_month]
+
+        dfc = dfg[dfg['producto'] == producto].copy()
+        dfc['volumen_total'] = dfc['volumen_total'].astype(float)
+
+        # Create the Plotly figure
+        fig = px.line(
+            dfc,
+            x='fecha_despacho',
+            y='volumen_total',
+            title=f" {plegend} ",
+            labels={"value": "Volumen Total", "variable": "Fecha"},
+            markers=True,
+            color_discrete_sequence=[color]
+        )
+
+        fig.update_layout(
+            xaxis_title="Fecha",
+            yaxis_title="Volumen Despachado"
+        )
+        # Return the figure to be displayed in the graph
+        return fig
+
     def create_table_data(producto):
         dfc = dfm[dfm['producto'] == producto].copy()
         dfc['volumen_total'] = dfc['volumen_total'].astype(float) / 1_000_000
@@ -306,11 +356,16 @@ def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
     acpm_table_data, acpm_table_columns = create_table_data(methods.p2)
     extra_table_data, extra_table_columns = create_table_data(methods.p3)
 
+    fig_corriente_fts = create_figure_fts(methods.p1, methods.verde, "Serie Completa - Gasolina Corriente")
+    fig_acpm_fts = create_figure_fts(methods.p2, methods.azul, "Serie Completa - ACPM")
+    fig_extra_fts = create_figure_fts(methods.p3, methods.gris, "Serie Completa - Extra")
+
     return (fig_corriente, fig_acpm, fig_extra,
             corriente_table_data, corriente_table_columns,
             acpm_table_data, acpm_table_columns,
             extra_table_data, extra_table_columns,
-            dropdown_visible, label_visible, button_visible)
+            dropdown_visible, label_visible, button_visible,
+            fig_corriente_fts, fig_acpm_fts, fig_extra_fts)
 
 
 

@@ -109,9 +109,9 @@ def update_graphs(n):
     df_acpm = df[df['producto'] == methods.p2].copy()
     df_extra = df[df['producto'] == methods.p3].copy()
 
-    fig1 = create_timeline_plot(df_corriente, 'Corriente', 'blue')
-    fig2 = create_timeline_plot(df_acpm, 'ACPM', 'green')
-    fig3 = create_timeline_plot(df_extra, 'Extra', 'gray')
+    fig1 = create_timeline_plot(df_corriente, 'Corriente', color= methods.verde)
+    fig2 = create_timeline_plot(df_acpm, 'ACPM', color= methods.azul)
+    fig3 = create_timeline_plot(df_extra, 'Extra', color= methods.gris)
 
     tz = pytz.timezone('America/Bogota')
     now = datetime.datetime.now(tz)
