@@ -5,3 +5,5 @@
 __pycache__
 *.xlsx
 *.pkl
+*.env
+prototyping_test/encuestas_eds/
