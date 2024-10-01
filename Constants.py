@@ -51,7 +51,7 @@ def Gen_parrafoBottom():
         Reporte mensual de la variación de ventas {current_mes} 2024 (conclusión generada el 01 de {current_mes}): 
         El informe mensual refleja que la variación relativa para gasolina corriente sigue cayendo, esta vez con una 
         caída del 7,64% respecto al mes de {current_mes} en 2023. De igual forma para ACPM se reporta 
-        una caida de 5,66%. Llama la atención que en los 09 meses que van del año 2024, 
+        una caida de 5,66%. Llama la atención que en los 09 meses que van del presente año, 
         la variación en ventas en gasolina corriente, a nivel agregado, ha sido negativa en todos los meses de 2024. 
         Las ventas de gasolina extra reportan un repunte positivo del 29,73% para el mes de {current_mes}.
         Más información contactarse a los siguientes canales: 
