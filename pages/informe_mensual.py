@@ -157,10 +157,10 @@ layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.H2(f"RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS {Constants.current_mes.upper()} 2024", style=style_H2),
+            html.H2(f"RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS {Constants.current_mes_informe.upper()} 2024", style=style_H2),
             html.H3("Información sobre la fuente de datos.", style=style_H3),
             html.P(Constants.parrafo_dt_source, style=style_text_bottom),
-            html.H3(f"Reporte mensual de la variación de ventas {Constants.current_mes.upper()} 2024:", style=style_H3),
+            html.H3(f"Reporte mensual de la variación de ventas {Constants.current_mes_informe.upper()} 2024:", style=style_H3),
             html.P(Constants.Gen_parrafoBottom(), style=style_text_bottom),
         ])
     ], style={'padding': '2em'}),
