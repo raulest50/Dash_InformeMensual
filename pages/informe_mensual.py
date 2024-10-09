@@ -17,27 +17,24 @@ import pandas as pd
 import methods
 from methods import format_zdf_list, getDataFrame_suset
 
+from Constants import DATA_DIR
+import os
 
+vmensual_filepath = os.path.join(DATA_DIR, 'vmensual.csv')
 
-
-
-## *********
-## SE DEJA SOLO POR REFERENCIA PERO YA NO SE CAMBIA MAS
-# this for production
-# df = getDataFrame_suset()
-# df['mes_despacho'] = df['mes_despacho'].astype(int)
-
-
-#this piece of code only for debuging
-## SE DEJA TAMBIEN PARA PRODUCCION
 df = None
-if(exists('./vmensual.csv')):
-    df = pd.read_csv('vmensual.csv')
-    #print("dataframe obtained locally")
-else:
+if(exists(vmensual_filepath)):
+    df = pd.read_csv(vmensual_filepath)
+    if(methods.is_vmensual_outdated(df)): # vmensual is loaded but is outdated
+        df = getDataFrame_suset()
+        df.to_csv(vmensual_filepath, index=False)
+        print("dataframe obtaned locally but got updated")
+    else:  # vmensual is up to date so isnt updated with socrata query
+        print("dataframe obtained locally")
+else: #  vmensual file do not exist
     df = getDataFrame_suset()
-    #print("dataframe obtained from remote origin")
-    df.to_csv('vmensual.csv', index=False)
+    df.to_csv(vmensual_filepath, index=False)
+    print("dataframe vmensual is created for the first time from SICOM cube")
 
 
 

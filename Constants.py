@@ -273,3 +273,5 @@ zdf_list = ['ABREGO', 'ACANDI', 'AGUACHICA', 'AGUSTIN CODAZZI', 'ALBAN', 'ALBANI
             'YACUANQUER', 'INIRIDA']
 
 
+DATA_DIR = 'data'
+

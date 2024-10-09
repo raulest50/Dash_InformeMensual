@@ -7,3 +7,4 @@ __pycache__
 *.pkl
 *.env
 prototyping_test/encuestas_eds/
+data/

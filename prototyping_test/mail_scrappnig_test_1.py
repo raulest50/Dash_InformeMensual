@@ -2,94 +2,95 @@ import imaplib
 import email
 from email.header import decode_header
 import os
-
 from dotenv import load_dotenv
 
-# Cargar variables de entorno desde el archivo .env
+# Load environment variables from the .env file
 load_dotenv()
 
-# Configuración del servidor y credenciales
+# Server configuration and credentials
 IMAP_SERVER = 'imap.hostinger.com'
 EMAIL_ACCOUNT = os.environ.get('EMAIL_ACCOUNT')
 PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
-# Criterio de búsqueda: solo el remitente
-REMITENTE_OBJETIVO = 'ldelgado@comce-soldicom.com'  # Reemplaza con el correo del remitente deseado
+# Search criterion: only the sender
+REMITENTE_OBJETIVO = 'ldelgado@comce-soldicom.com'  # Replace with the desired sender's email
 
 def clean(text):
-    # Limpia el texto para usarlo en nombres de archivo
-    return "".join(c if c.isalnum() else "_" for c in text)
+    # Clean the text for use in filenames
+    allowed_chars = set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._- ")
+    return "".join(c if c in allowed_chars else "_" for c in text)
 
 def fetch_xls_from_mail(subfolder):
-    # Verificar que las credenciales estén disponibles
+    # Verify that credentials are available
     if not EMAIL_ACCOUNT or not PASSWORD:
-        print("Error: Las credenciales de correo no están configuradas.")
+        print("Error: Email credentials are not configured.")
         return
 
     try:
-        # Conexión al servidor IMAP
+        # Connect to the IMAP server
         mail = imaplib.IMAP4_SSL(IMAP_SERVER)
 
-        # Autenticación
+        # Authentication
         mail.login(EMAIL_ACCOUNT, PASSWORD)
 
-        # Seleccionar la bandeja de entrada
+        # Select the inbox
         mail.select('inbox')
 
-        # Construir el criterio de búsqueda solo con el remitente
+        # Build the search criterion using only the sender
         criterio_busqueda = f'(FROM "{REMITENTE_OBJETIVO}")'
 
-        # Buscar correos que coincidan con el criterio
+        # Search for emails matching the criterion
         result, data = mail.search(None, criterio_busqueda)
 
-        # Obtener la lista de IDs de correos
+        # Get the list of email IDs
         email_ids = data[0].split()
         print(f'Correos encontrados: {len(email_ids)}')
 
-        # Crear el directorio si no existe
+        # Create the directory if it doesn't exist
         if not os.path.exists(subfolder):
             os.makedirs(subfolder)
 
         for email_id in email_ids:
-            # Obtener el correo
+            # Retrieve the email
             result, message_data = mail.fetch(email_id, '(RFC822)')
             raw_email = message_data[0][1]
 
-            # Decodificar el correo
+            # Decode the email
             email_message = email.message_from_bytes(raw_email)
 
-            # Procesar los adjuntos
+            # Process attachments
             for part in email_message.walk():
-                # Si el mensaje es multipart
+                # Skip multipart messages
                 if part.get_content_maintype() == 'multipart':
                     continue
-                # Si es un adjunto
+                # Skip if not an attachment
                 if part.get('Content-Disposition') is None:
                     continue
 
-                # Obtener el nombre del archivo adjunto
+                # Get the attachment's filename
                 filename = part.get_filename()
                 if filename:
-                    # Decodificar el nombre del archivo si es necesario
+                    # Decode the filename if necessary
                     filename = decode_header(filename)[0][0]
                     if isinstance(filename, bytes):
                         filename = filename.decode('utf-8', errors='ignore')
 
-                    # Verificar si el adjunto es un archivo de Excel
+                    # Check if the attachment is an Excel file
                     if filename.endswith(('.xls', '.xlsx')):
-                        filepath = os.path.join(subfolder, clean(filename))
-                        # Guardar el archivo adjunto
+                        # Clean the filename
+                        filename = clean(filename)
+                        filepath = os.path.join(subfolder, filename)
+                        # Save the attachment
                         with open(filepath, 'wb') as f:
                             f.write(part.get_payload(decode=True))
                         print(f'Archivo guardado: {filepath}')
 
-        # Cerrar la conexión
+        # Close the connection
         mail.logout()
 
     except imaplib.IMAP4.error as e:
         print(f'Error al conectar o autenticar con el servidor IMAP: {e}')
 
-
-# Especifica la subcarpeta donde se guardarán los archivos Excel
-subfolder = 'encuestas_eds'  # Reemplaza con el nombre de la subcarpeta deseada
+# Specify the subfolder where Excel files will be saved
+subfolder = 'encuestas_eds'  # Replace with the desired subfolder name
 fetch_xls_from_mail(subfolder)
