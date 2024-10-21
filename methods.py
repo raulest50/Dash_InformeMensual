@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from pytz import timezone
 
+import os
+
 p1 = "CORRIENTE"
 p2 = "DIESEL"
 p3 = "EXTRA"
@@ -101,7 +103,7 @@ def scrape_url_list():
 
 
 
-def get_data_frames_from_excel_url(excel_url):
+def get_data_frames_from_excel_url(excel_url, folder):
     # URL of the .xlsx file
     #url = xlsx_links[0][1]
     # Fetch the content of the file
@@ -109,12 +111,15 @@ def get_data_frames_from_excel_url(excel_url):
     response.raise_for_status()  # Ensure the request was successful
 
     excel_file = 'temp_file.xlsx'
+
+    excel_filepath = os.path.join(folder, excel_file)
+
     # Save the content to a temporary file
-    with open(excel_file, 'wb') as temp_file:
+    with open(excel_filepath, 'wb') as temp_file:
         temp_file.write(response.content)
 
-    df_precios_corriente = excel_file_precios_to_dframe(excel_file, 32, 19, 19)
-    df_precios_acpm = excel_file_precios_to_dframe(excel_file, 56, 18, 19)
+    df_precios_corriente = excel_file_precios_to_dframe(excel_filepath, 32, 19, 19)
+    df_precios_acpm = excel_file_precios_to_dframe(excel_filepath, 56, 18, 19)
 
     return df_precios_corriente, df_precios_acpm
 

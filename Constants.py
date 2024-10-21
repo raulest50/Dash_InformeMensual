@@ -274,4 +274,7 @@ zdf_list = ['ABREGO', 'ACANDI', 'AGUACHICA', 'AGUSTIN CODAZZI', 'ALBAN', 'ALBANI
 
 
 DATA_DIR = 'data'
+DATA_DIR_INF_MENSUAL = 'data/informe_mensual'
+DATA_DIR_ESTRUCTURA_PRECIOS = 'data/estructura_precios'
+
 

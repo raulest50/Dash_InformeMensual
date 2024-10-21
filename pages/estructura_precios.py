@@ -12,14 +12,18 @@ from os.path import exists
 
 import plotly.express as px
 
-from Constants import style_header1, style_text_bottom, style_drop_label, style_header4,\
-style_cell, style_header, style_data, style_table
+from Constants import style_header1, style_text_bottom, style_drop_label, style_header4, \
+    style_cell, style_header, style_data, style_table, DATA_DIR_ESTRUCTURA_PRECIOS
 
 from methods import scrape_url_list, get_data_frames_from_excel_url
 
 import numpy as np
+import os
 
 
+# folder en que se guardara la persistent data del page estructura de precios
+if not os.path.exists(DATA_DIR_ESTRUCTURA_PRECIOS):
+    os.makedirs(DATA_DIR_ESTRUCTURA_PRECIOS)
 
 lista_informes_tuple = scrape_url_list()
 # Create the options for the lista informes dropdown
@@ -28,18 +32,24 @@ lista_informes = [{'label': item[0], 'value': item[0]} for item in lista_informe
 def get_dataframes_dict(lista_informes):
     r = {}
     for name, url in lista_informes_tuple:
-        r[name] = [get_data_frames_from_excel_url(url)]
+        r[name] = [get_data_frames_from_excel_url(url, DATA_DIR_ESTRUCTURA_PRECIOS)]
     return r
 
 
 fname_df_dict = 'df_dictionary.pkl'
-if not exists(fname_df_dict):
+
+df_dict_filepath = os.path.join(DATA_DIR_ESTRUCTURA_PRECIOS, fname_df_dict)
+
+if not exists(df_dict_filepath):
     df_dictionary = get_dataframes_dict(lista_informes)
-    with open(fname_df_dict, 'wb') as file:
+    with open(df_dict_filepath, 'wb') as file:
         pickle.dump(df_dictionary, file)
 else:
-    with open(fname_df_dict, 'rb') as file:
+    with open(df_dict_filepath, 'rb') as file:
         df_dictionary = pickle.load(file)
+
+print("lista_informes:", lista_informes)
+print("df_dictionary keys:", df_dictionary.keys())
 
 columnas_ciudades = df_dictionary[lista_informes[0]['value']][0][0].columns[1:]
 
@@ -49,11 +59,6 @@ lista_informes_tuple = scrape_url_list()
 # Create the options for the lista informes dropdown
 lista_informes = [{'label': item[0], 'value': item[0]} for item in lista_informes_tuple]
 
-def get_dataframes_dict(lista_informes):
-    r = {}
-    for name, url in lista_informes_tuple:
-        r[name] = [get_data_frames_from_excel_url(url)]
-    return r
 
 fname_df_dict = 'df_dictionary.pkl'
 if not exists(fname_df_dict):

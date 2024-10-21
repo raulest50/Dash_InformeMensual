@@ -17,10 +17,14 @@ import pandas as pd
 import methods
 from methods import format_zdf_list, getDataFrame_suset
 
-from Constants import DATA_DIR
+from Constants import DATA_DIR_INF_MENSUAL
 import os
 
-vmensual_filepath = os.path.join(DATA_DIR, 'vmensual.csv')
+# folder en que se guardara la persistent data del page informe mensual
+if not os.path.exists(DATA_DIR_INF_MENSUAL):
+    os.makedirs(DATA_DIR_INF_MENSUAL)
+
+vmensual_filepath = os.path.join(DATA_DIR_INF_MENSUAL, 'vmensual.csv')
 
 df = None
 if(exists(vmensual_filepath)):

@@ -18,7 +18,7 @@ app.layout = html.Div([
             dbc.Col(
                 html.Div(
                     dcc.Link(f"{page['name']}", href=page["relative_path"], style=Constants.style_navbar_link)
-            ), style=Constants.style_navbar_col, width=4) for page in dash.page_registry.values()
+            ), style=Constants.style_navbar_col, width=3) for page in dash.page_registry.values()
         ], style=Constants.style_navbar),
     ]),
     dash.page_container

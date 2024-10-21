@@ -6,6 +6,7 @@ authors = ["raulest50 <raulest50@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
+setuptools = "^75.2.0"
 python = "^3.12"
 beautifulsoup4 = "4.12.3"
 dash = "2.18.1"
@@ -16,10 +17,12 @@ pandas = "2.2.3"
 plotly = "5.24.1"
 python-dotenv = "1.0.1"
 pytz = "2024.2"
-requests = "2.32.3"  # Corrected capitalization
+requests = "2.32.3"
 seaborn = "0.13.2"
 sodapy = "2.2.0"
 statsmodels = "0.14.4"
+openpyxl = "^3.1.5"
+
 
 
 [build-system]
