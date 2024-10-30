@@ -56,3 +56,6 @@ plt.ylabel('Log of Volumen Corriente')
 plt.title('Linear Regression of Log-Transformed Variables')
 plt.legend()
 plt.show()
+
+elasticidad_demanda = modelo.params['log_precio_corriente']
+print(f"Elasticidad de la demanda: {elasticidad_demanda}")

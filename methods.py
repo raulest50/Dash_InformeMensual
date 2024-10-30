@@ -9,6 +9,11 @@ from pytz import timezone
 
 import os
 
+import pickle
+import Elasticidad_Methods as EM
+
+from Constants import DATA_DIR_ELASTICIDAD
+
 p1 = "CORRIENTE"
 p2 = "DIESEL"
 p3 = "EXTRA"
@@ -46,8 +51,6 @@ def getDataFrame():
         except requests.exceptions.Timeout:
             print("time out exception")
             not_success = True
-
-
 
 """dataframe superset"""
 def getDataFrame_suset():
@@ -185,3 +188,5 @@ def is_vmensual_outdated(df):
         return True  # Data is outdated
     else:
         return False  # Data is up-to-date
+
+

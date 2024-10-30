@@ -37,7 +37,6 @@ def get_dataframes_dict(lista_informes):
 
 
 fname_df_dict = 'df_dictionary.pkl'
-
 df_dict_filepath = os.path.join(DATA_DIR_ESTRUCTURA_PRECIOS, fname_df_dict)
 
 if not exists(df_dict_filepath):
@@ -50,24 +49,6 @@ else:
 
 print("lista_informes:", lista_informes)
 print("df_dictionary keys:", df_dictionary.keys())
-
-columnas_ciudades = df_dictionary[lista_informes[0]['value']][0][0].columns[1:]
-
-
-
-lista_informes_tuple = scrape_url_list()
-# Create the options for the lista informes dropdown
-lista_informes = [{'label': item[0], 'value': item[0]} for item in lista_informes_tuple]
-
-
-fname_df_dict = 'df_dictionary.pkl'
-if not exists(fname_df_dict):
-    df_dictionary = get_dataframes_dict(lista_informes)
-    with open(fname_df_dict, 'wb') as file:
-        pickle.dump(df_dictionary, file)
-else:
-    with open(fname_df_dict, 'rb') as file:
-        df_dictionary = pickle.load(file)
 
 columnas_ciudades = df_dictionary[lista_informes[0]['value']][0][0].columns[1:]
 

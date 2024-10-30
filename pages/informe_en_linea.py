@@ -51,7 +51,7 @@ layout = dbc.Container([
                    "dentro de una ventana de 60 dias de acuerdo a la informacion "
                    "reportada por el cubo de SICOM. Solo se tienen en cuenta los agentes: "
                    "COMERCIALIZADOR INDUSTRIAL, ESTACION DE SERVICIO AUTOMOTRIZ y ESTACION DE SERVICIO FLUVIAL"
-                   ".Las cifras se actualizan cada 15 minutos.", style=style_text_bottom)
+                   ".Las cifras se actualizan cada 15 minutos. (LA PAGINA PODRIA TOMAR VARIOS SEGUNDOS ANTES DE CARGAR COMPLETAMENTE)", style=style_text_bottom)
         ], width=12)
     ], style={'padding': '2em'}),
 
