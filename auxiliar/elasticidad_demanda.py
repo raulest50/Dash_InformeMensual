@@ -16,7 +16,7 @@ import Elasticidad_Methods as em
 df = em.load_demanda_df_time_series()
 lista_lugares = df['ciudad'].unique().tolist()
 
-dash.register_page(__name__)
+#dash.register_page(__name__)
 
 layout = dbc.Container([
     dbc.Row([
