@@ -75,11 +75,11 @@ def create_demanda_time_series_dtframe(lista_fehas, lista_ciudades, df_vols, dic
 def load_dframe_test():
     fname_df_dict = 'df_dictionary.pkl'
 
-    df_dict_filepath = "../data/estructura_precios/df_dictionary.pkl"
+    df_dict_filepath = "../../data/estructura_precios/df_dictionary.pkl"
     with open(df_dict_filepath, 'rb') as file:
         df_dictionary = organizar_diccionario(pickle.load(file))
 
-    df = pd.read_csv("../data/informe_mensual/vmensual.csv")
+    df = pd.read_csv("../../data/informe_mensual/vmensual.csv")
 
     df['anio_despacho'] = df['anio_despacho'].astype(int)
     df['mes_despacho'] = df['mes_despacho'].astype(int)
