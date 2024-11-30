@@ -6,44 +6,15 @@ import plotly.express as px
 
 import Constants
 
-from os.path import exists
-
 from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2,\
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, zdf_options
 
 from dash.dependencies import Input, Output, State
 import pandas as pd
 
-import methods
-from methods import format_zdf_list, getDataFrame_suset
+from services.informe_mensual_service import InformeMensualService
 
-from Constants import DATA_DIR_INF_MENSUAL
-import os
-
-# folder en que se guardara la persistent data del page informe mensual
-if not os.path.exists(DATA_DIR_INF_MENSUAL):
-    os.makedirs(DATA_DIR_INF_MENSUAL)
-
-vmensual_filepath = os.path.join(DATA_DIR_INF_MENSUAL, 'vmensual.csv')
-
-df = None
-if(exists(vmensual_filepath)):
-    df = pd.read_csv(vmensual_filepath)
-    if(methods.is_vmensual_outdated(df)): # vmensual is loaded but is outdated
-        df = getDataFrame_suset()
-        df.to_csv(vmensual_filepath, index=False)
-        print("dataframe obtaned locally but got updated")
-    else:  # vmensual is up to date so isnt updated with socrata query
-        print("dataframe obtained locally")
-else: #  vmensual file do not exist
-    df = getDataFrame_suset()
-    df.to_csv(vmensual_filepath, index=False)
-    print("dataframe vmensual is created for the first time from SICOM cube")
-
-
-
-
-
+ims = InformeMensualService()  #  inicializacion de datos
 
 dash.register_page(__name__, path='/')
 
@@ -186,7 +157,7 @@ layout = dbc.Container([
             dbc.ModalHeader(dbc.ModalTitle("Información sobre ZDF")),
             dbc.ModalBody(f"Los 158 municipios tenidos en cuenta como zonas de frontera"
                           f" en esta aplicación (hay 2 COLON en departamentos diferentes): \n"
-                          f" {format_zdf_list(Constants.zdf_list, 10)} \n"),
+                          f" {ims.format_zdf_list(Constants.zdf_list, 10)} \n"),
             dbc.ModalFooter(
                 dbc.Button("Close", id="close-modal", className="ml-auto")
             ),
@@ -237,7 +208,7 @@ def toggle_modal(n1, n2, is_open):
 )
 def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
     # Pivot the DataFrame to get years as columns and fuel types as rows
-
+    df = ims.df
     dfm = None
 
     if geo_seleccionada == Constants.geo_translate[0]: # informe t'odo el pais
@@ -349,17 +320,17 @@ def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
             {"name": "Variación Relativa (%)", "id": "percentage_variation"}
         ]
 
-    fig_corriente = create_figure(methods.p1, methods.verde, "Gasolina Corriente")
-    fig_acpm = create_figure(methods.p2, methods.azul, "ACPM")
-    fig_extra = create_figure(methods.p3, methods.gris, "Gasolina Extra")
+    fig_corriente = create_figure(ims.P1, ims.VERDE, "Gasolina Corriente")
+    fig_acpm = create_figure(ims.P2, ims.AZUL, "ACPM")
+    fig_extra = create_figure(ims.P3, ims.GRIS, "Gasolina Extra")
 
-    corriente_table_data, corriente_table_columns = create_table_data(methods.p1)
-    acpm_table_data, acpm_table_columns = create_table_data(methods.p2)
-    extra_table_data, extra_table_columns = create_table_data(methods.p3)
+    corriente_table_data, corriente_table_columns = create_table_data(ims.P1)
+    acpm_table_data, acpm_table_columns = create_table_data(ims.P2)
+    extra_table_data, extra_table_columns = create_table_data(ims.P3)
 
-    fig_corriente_fts = create_figure_fts(methods.p1, methods.verde, "Serie Completa - Gasolina Corriente")
-    fig_acpm_fts = create_figure_fts(methods.p2, methods.azul, "Serie Completa - ACPM")
-    fig_extra_fts = create_figure_fts(methods.p3, methods.gris, "Serie Completa - Extra")
+    fig_corriente_fts = create_figure_fts(ims.P1, ims.VERDE, "Serie Completa - Gasolina Corriente")
+    fig_acpm_fts = create_figure_fts(ims.P2, ims.AZUL, "Serie Completa - ACPM")
+    fig_extra_fts = create_figure_fts(ims.P3, ims.GRIS, "Serie Completa - Extra")
 
     return (fig_corriente, fig_acpm, fig_extra,
             corriente_table_data, corriente_table_columns,

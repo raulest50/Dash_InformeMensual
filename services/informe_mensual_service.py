@@ -15,10 +15,24 @@ class InformeMensualService(InitService):
     VMENSUAL_FILEPATH = os.path.join(DATA_DIR_INF_MENSUAL, 'vmensual.csv')
 
     DB_ALIAS_VOL_MAYOTISTAS = "339g-zjac"
-    def __init__(self,):
-        pass
 
-    def checkDataStatus(self):
+    def __init__(self):
+        self.df = self.resolve_df_vmensual()
+
+    def resolve_df_vmensual(self):
+        try:
+            status = self.check_data_status()
+            if status == self.SCRATCH:
+                return self.scratch_initialization()
+            elif status == self.OUTDATED:
+                return self.update_data()
+            elif status == self.UPTODATE:
+                print("Data vmensual is up to date")
+                return pd.read_csv(self.VMENSUAL_FILEPATH)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    def check_data_status(self):
         status = self.SCRATCH
         if os.path.exists(self.DATA_DIR_INF_MENSUAL) & os.path.exists(self.VMENSUAL_FILEPATH):
             if self.it_is_outdated():
@@ -27,12 +41,13 @@ class InformeMensualService(InitService):
                 status = self.UPTODATE
         return status
 
-    def scratchInitialization(self):
-        df = self.fetch_socrata_datosgov(self, self.build_query(), self.DB_ALIAS_VOL_MAYOTISTAS, 10)
+    def scratch_initialization(self):
+        df = self.fetch_socrata_datosgov(self, query=self.build_query(), db_alias=self.DB_ALIAS_VOL_MAYOTISTAS, t_out=20)
         df.to_csv(self.VMENSUAL_FILEPATH, index=False)
+        return df
 
-    def updateData(self):
-        print("InformeMensual: Updating data...")
+    def update_data(self):
+        return self.scratch_initialization()
 
     def it_is_outdated(self):
         df = pd.read_csv(self.VMENSUAL_FILEPATH)
@@ -63,3 +78,7 @@ class InformeMensualService(InitService):
             f"LIMIT 250000"
         )
         return query
+
+    def format_zdf_list(zdf_list, n=10):
+        return '\n'.join(', '.join(zdf_list[i:i + n]) for i in range(0, len(zdf_list), n))
+

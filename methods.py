@@ -171,22 +171,4 @@ def getDataFrame_OnlineReport():
             not_success = True
 
 
-def is_vmensual_outdated(df):
-    df['anio_despacho'] = df['anio_despacho'].astype(int)
-    df['mes_despacho'] = df['mes_despacho'].astype(int)
-    latest_year = df['anio_despacho'].max() # Find the maximum year
-    df_latest_year = df[df['anio_despacho'] == latest_year]
-    latest_month = df_latest_year['mes_despacho'].max()
-
-    # Get the current date and time in UTC-5 (Bogota time)
-    bogota_tz = timezone('America/Bogota')
-    current_datetime = datetime.now(bogota_tz)
-    current_year = current_datetime.year
-    current_month = current_datetime.month
-
-    if latest_year != current_year or latest_month != current_month:
-        return True  # Data is outdated
-    else:
-        return False  # Data is up-to-date
-
 

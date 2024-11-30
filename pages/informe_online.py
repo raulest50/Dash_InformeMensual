@@ -4,8 +4,8 @@ import dash
 import dash_bootstrap_components as dbc
 import pandas as pd
 from dash import dcc, html, dash_table, callback, Output, Input
-from Constants import style_header1, style_text_bottom, style_drop_label, style_header4,\
-style_cell, style_header, style_data, style_table
+from Constants import style_header1, style_text_bottom, style_drop_label
+
 
 import datetime
 import pytz
@@ -96,14 +96,10 @@ layout = dbc.Container([
 )
 def update_graphs(n):
 
-    #print("Interval Update")
-    # Load or update your DataFrame here
     df = methods.getDataFrame_OnlineReport()  # Function that fetches/updates the DataFrame
 
     df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
     df['volumen_total'] = df['volumen_total'].astype(float)
-
-    #print(df)
 
     df_corriente = df[df['producto'] == methods.p1].copy()
     df_acpm = df[df['producto'] == methods.p2].copy()
