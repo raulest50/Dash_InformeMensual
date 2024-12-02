@@ -7,49 +7,15 @@ import dash_bootstrap_components as dbc
 
 import Constants
 
-import pickle
-from os.path import exists
-
 import plotly.express as px
 
 from Constants import style_header1, style_text_bottom, style_drop_label, style_header4, \
-    style_cell, style_header, style_data, style_table, DATA_DIR_ESTRUCTURA_PRECIOS
+    style_cell, style_header, style_data, style_table
 
 import numpy as np
-import os
+from services.estructura_precios_services import EstructuraPreciosService
 
-
-# folder en que se guardara la persistent data del page estructura de precios
-if not os.path.exists(DATA_DIR_ESTRUCTURA_PRECIOS):
-    os.makedirs(DATA_DIR_ESTRUCTURA_PRECIOS)
-
-lista_informes_tuple = scrape_url_list()
-# Create the options for the lista informes dropdown
-lista_informes = [{'label': item[0], 'value': item[0]} for item in lista_informes_tuple]
-
-def get_dataframes_dict(lista_informes):
-    r = {}
-    for name, url in lista_informes_tuple:
-        r[name] = [get_data_frames_from_excel_url(url, DATA_DIR_ESTRUCTURA_PRECIOS)]
-    return r
-
-
-fname_df_dict = 'df_dictionary.pkl'
-df_dict_filepath = os.path.join(DATA_DIR_ESTRUCTURA_PRECIOS, fname_df_dict)
-
-if not exists(df_dict_filepath):
-    df_dictionary = get_dataframes_dict(lista_informes)
-    with open(df_dict_filepath, 'wb') as file:
-        pickle.dump(df_dictionary, file)
-else:
-    with open(df_dict_filepath, 'rb') as file:
-        df_dictionary = pickle.load(file)
-
-print("lista_informes:", lista_informes)
-print("df_dictionary keys:", df_dictionary.keys())
-
-columnas_ciudades = df_dictionary[lista_informes[0]['value']][0][0].columns[1:]
-
+eps = EstructuraPreciosService()
 
 dash.register_page(__name__)
 
@@ -74,8 +40,8 @@ layout = dbc.Container([
                 html.Label("Seleccionar Mes Informe:", style=style_drop_label),  # Add label
                 dcc.Dropdown(
                     id='mes-informe-dropdown',
-                    options=lista_informes,
-                    value=lista_informes[0]['value'],  # Default selected month
+                    options=eps.lista_informes,
+                    value=eps.lista_informes[0]['value'],  # Default selected month
                     clearable=False
                 )
             ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
@@ -83,8 +49,8 @@ layout = dbc.Container([
                 html.Label("Seleccionar Ciudad:", style=style_drop_label),  # Add label
                 dcc.Dropdown(
                     id='ciudad-dropdown',
-                    options=columnas_ciudades, # en [0] esta la palabra "ciudad" entonces se omite, lista empieza desde 1 (barranquilla)
-                    value=columnas_ciudades[0],  # Default selected ciudad
+                    options=eps.columnas_ciudades, # en [0] esta la palabra "ciudad" entonces se omite, lista empieza desde 1 (barranquilla)
+                    value=eps.columnas_ciudades[0],  # Default selected ciudad
                     clearable=False
                 )
             ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
@@ -181,7 +147,7 @@ def sum_cells_dt_frame(df, row_indices):
 )
 def update_precios_ref(informe_name, ciudad_name):
 
-    df_precios_corriente, df_precios_acpm = df_dictionary[informe_name][0]
+    df_precios_corriente, df_precios_acpm = eps.df_dictionary[informe_name][0]
     df_precios_table_corriente = df_precios_corriente[['CIUDAD', ciudad_name]].copy()
     df_precios_table_acpm = df_precios_acpm[['CIUDAD', ciudad_name]].copy()
 
