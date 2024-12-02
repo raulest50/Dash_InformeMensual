@@ -6,13 +6,12 @@ import pandas as pd
 from dash import dcc, html, dash_table, callback, Output, Input
 from Constants import style_header1, style_text_bottom, style_drop_label
 
-
 import datetime
 import pytz
 
 import plotly.express as px
 
-import methods
+from services.informe_online_service import InformeOnlineService
 
 
 def create_timeline_plot(df, titulo, color):
@@ -31,6 +30,8 @@ def create_timeline_plot(df, titulo, color):
     return fig
 
 dash.register_page(__name__)
+
+ios = InformeOnlineService()
 
 layout = dbc.Container([
 
@@ -96,18 +97,18 @@ layout = dbc.Container([
 )
 def update_graphs(n):
 
-    df = methods.getDataFrame_OnlineReport()  # Function that fetches/updates the DataFrame
+    df = ios.getDataFrame_OnlineReport()  # Function that fetches/updates the DataFrame
 
     df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
     df['volumen_total'] = df['volumen_total'].astype(float)
 
-    df_corriente = df[df['producto'] == methods.p1].copy()
-    df_acpm = df[df['producto'] == methods.p2].copy()
-    df_extra = df[df['producto'] == methods.p3].copy()
+    df_corriente = df[df['producto'] == ios.P1].copy()
+    df_acpm = df[df['producto'] == ios.P2].copy()
+    df_extra = df[df['producto'] == ios.P3].copy()
 
-    fig1 = create_timeline_plot(df_corriente, 'Corriente', color= methods.verde)
-    fig2 = create_timeline_plot(df_acpm, 'ACPM', color= methods.azul)
-    fig3 = create_timeline_plot(df_extra, 'Extra', color= methods.gris)
+    fig1 = create_timeline_plot(df_corriente, 'Corriente', color= ios.verde)
+    fig2 = create_timeline_plot(df_acpm, 'ACPM', color= ios.azul)
+    fig3 = create_timeline_plot(df_extra, 'Extra', color= ios.gris)
 
     tz = pytz.timezone('America/Bogota')
     now = datetime.datetime.now(tz)
@@ -130,7 +131,7 @@ def download_csv_corriente(n_clicks):
     df = pd.read_csv('or_corriente.csv')
     df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
     df['volumen_total'] = df['volumen_total'].astype(float)
-    df_corriente = df[df['producto'] == methods.p1].copy()
+    df_corriente = df[df['producto'] == ios.P1].copy()
     return dcc.send_data_frame(df_corriente.to_csv, "corriente.csv")
 
 
@@ -144,7 +145,7 @@ def download_csv_acpm(n_clicks):
     df = pd.read_csv('or_acpm.csv')
     df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
     df['volumen_total'] = df['volumen_total'].astype(float)
-    df_acpm = df[df['producto'] == methods.p2].copy()
+    df_acpm = df[df['producto'] == ios.P2].copy()
     return dcc.send_data_frame(df_acpm.to_csv, "acpm.csv")
 
 @callback(
@@ -157,7 +158,7 @@ def download_csv_extra(n_clicks):
     df = pd.read_csv('or_extra.csv')
     df['fecha_despacho'] = pd.to_datetime(df['fecha_despacho'], format='%Y-%m-%d')
     df['volumen_total'] = df['volumen_total'].astype(float)
-    df_extra = df[df['producto'] == methods.p3].copy()
+    df_extra = df[df['producto'] == ios.P3].copy()
     return dcc.send_data_frame(df_extra.to_csv, "extra.csv")
 
 

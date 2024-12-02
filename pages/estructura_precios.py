@@ -15,8 +15,6 @@ import plotly.express as px
 from Constants import style_header1, style_text_bottom, style_drop_label, style_header4, \
     style_cell, style_header, style_data, style_table, DATA_DIR_ESTRUCTURA_PRECIOS
 
-from methods import scrape_url_list, get_data_frames_from_excel_url
-
 import numpy as np
 import os
 
