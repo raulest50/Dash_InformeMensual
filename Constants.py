@@ -41,20 +41,21 @@ parrafo_dt_source = """
 """
 
 # seleccionar el mes actual para t'odo el texto de conclusion al final del dashboard
-current_mes_informe = 'octubre'
-current_mes_elaboracion = 'noviembre'
+current_mes_informe = 'noviembre'
+current_mes_elaboracion = 'diciembre'
 
 def Gen_parrafoBottom():
 
     #mes_str = get_mes_name(mes)
 
     return f"""
-        Reporte mensual de la variación de ventas {current_mes_informe} 2024 (conclusión generada el 05 de {current_mes_elaboracion}): 
-        El informe mensual refleja que la variación relativa para gasolina corriente sigue cayendo, esta vez con una 
-        caída del 3,16% respecto al mes de {current_mes_informe} en 2023. Por el contrario para ACPM se reporta 
-        una aumento de 5,87%. Llama la atención que en los 10 meses que van del presente año, 
-        la variación en ventas en gasolina corriente, a nivel agregado, ha sido negativa en todos los meses de 2024. 
-        Las ventas de gasolina extra reportan un repunte positivo del 34,75% para el mes de {current_mes_informe}.
+        Reporte mensual de la variación de ventas {current_mes_informe} 2024 (conclusión generada el 03 de {current_mes_elaboracion}): 
+        El informe mensual refleja una variación relativa positiva en el consumo de gasolina corriente de 1,22% 
+        respecto al mes de {current_mes_informe} en 2023. Para el caso de ACPM se reporta 
+        un aumento de 10,23%. Llama la atención que en los 11 meses que van del presente año, 
+        la variación en ventas en gasolina corriente, a nivel agregado, ha sido negativa en todos los meses de 2024,
+        excepto solo para el mes de noviembre. 
+        Las ventas de gasolina extra reportan un repunte positivo del 29,07% para el mes de {current_mes_informe}.
         Más información contactarse a los siguientes canales: 
         """
 
@@ -217,7 +218,7 @@ geo_translate = [
 
 
 """
-hay ciudades de colobia que el nombre puede ser confuso, por ejemplo santiago de tunja es tunja y cartagena de indias
+hay ciudades de colombia que el nombre puede ser confuso, por ejemplo santiago de tunja es tunja y cartagena de indias
 es diferente de cartagena (hay 2 cartagenas). por eso es util colocar el nombre del municipio como en el array geo.
 pero en la base de datos abierta de mayoriastas el string es diferente. por ejemplo en la bd es CALI en lugar de 
 santiago de cali. entonces por eso se hace este diccionario para poder traducir entre el string que se muestra
@@ -271,11 +272,5 @@ zdf_list = ['ABREGO', 'ACANDI', 'AGUACHICA', 'AGUSTIN CODAZZI', 'ALBAN', 'ALBANI
             'SIBUNDOY', 'TAME', 'TAMINANGO', 'TANGUA', 'TARAIRA', 'TEORAMA', 'TIBU', 'TOLEDO', 'TUQUERRES', 'UNGUIA',
             'URIBIA', 'URUMITA', 'VALLE DEL GUAMUEZ', 'VALLEDUPAR', 'VILLA DEL ROSARIO', 'VILLAGARZON', 'VILLANUEVA',
             'YACUANQUER', 'INIRIDA']
-
-
-DATA_DIR = 'data'
-DATA_DIR_INF_MENSUAL = 'data/informe_mensual'
-
-DATA_DIR_ELASTICIDAD = 'data/elasticidad_damanda'
 
 

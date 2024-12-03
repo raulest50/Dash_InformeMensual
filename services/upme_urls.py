@@ -63,11 +63,5 @@ data = [
 ]
 
 # Create a DataFrame from the data
-df = pd.DataFrame(data)
-
-# Specify the CSV file name
-output_file = 'urls_upme.csv'
-
-# Export the DataFrame to a CSV file with comma as the separator
-df.to_csv(output_file, index=False, sep=',')
+upme_urls = pd.DataFrame(data)
 
