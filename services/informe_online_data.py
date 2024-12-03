@@ -6,7 +6,12 @@ import services.general as general
 DB_ALIAS_VOL_MAYORISTAS = "339g-zjac"
 
 
-def buildQuery():
+
+def ensure_ionline_data():
+    pass
+
+
+def build_query():
     today = datetime.today().strftime('%Y-%m-%d')
     sixty_days_ago = (datetime.today() - timedelta(days=60)).strftime('%Y-%m-%d')
     query = (
@@ -21,7 +26,7 @@ def buildQuery():
     return query
 
 
-def getDataFrame_OnlineReport():
-    df = general.fetch_socrata_datosgov(buildQuery(), DB_ALIAS_VOL_MAYORISTAS, 20)
+def get_data_frame_online_report():
+    df = general.fetch_socrata_datosgov(build_query(), DB_ALIAS_VOL_MAYORISTAS, 20)
     return df
 
