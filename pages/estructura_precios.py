@@ -13,9 +13,9 @@ from Constants import style_header1, style_text_bottom, style_drop_label, style_
     style_cell, style_header, style_data, style_table
 
 import numpy as np
-from services.estructura_precios_services import EstructuraPreciosService
+from services.estructura_precios_data import EstructuraPreciosLoad
 
-eps = EstructuraPreciosService()
+eps = EstructuraPreciosLoad()
 
 dash.register_page(__name__)
 

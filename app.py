@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 
 import Constants
 
+
 # Initialize the Dash app with Bootstrap stylesheet
 app = dash.Dash(__name__, external_stylesheets=[
     dbc.themes.BOOTSTRAP,

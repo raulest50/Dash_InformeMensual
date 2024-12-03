@@ -6,20 +6,21 @@ import plotly.express as px
 
 import Constants
 
-from Constants import style_data, style_cell, style_header, style_table, style_graph, style_graph2,\
+from Constants import style_data, style_cell, style_header, style_table, style_graph,\
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, zdf_options
 
 from dash.dependencies import Input, Output, State
 import pandas as pd
 
-from services.informe_mensual_service import InformeMensualService
+from services.informe_mensual_data import InformeMensualLoad
+from services.general import P1, P2, P3, AZUL, VERDE, GRIS
 
-ims = InformeMensualService()  #  inicializacion de datos
+ims = InformeMensualLoad()  # inicializacion de datos
 
 dash.register_page(__name__, path='/')
 
 layout = dbc.Container([
-    #dcc.Store(id='zdf-dropdown-visible', data=True),
+    # dcc.Store(id='zdf-dropdown-visible', data=True),
     dbc.Row([
         dbc.Col([
             html.H1(" Reporte Mensual Ventas Combustible Liquido", style=style_header1)
@@ -320,17 +321,17 @@ def update_graph(mes_seleccionado, geo_seleccionada, zdf_opt_sleeccionada):
             {"name": "Variación Relativa (%)", "id": "percentage_variation"}
         ]
 
-    fig_corriente = create_figure(ims.P1, ims.VERDE, "Gasolina Corriente")
-    fig_acpm = create_figure(ims.P2, ims.AZUL, "ACPM")
-    fig_extra = create_figure(ims.P3, ims.GRIS, "Gasolina Extra")
+    fig_corriente = create_figure(P1, VERDE, "Gasolina Corriente")
+    fig_acpm = create_figure(P2, AZUL, "ACPM")
+    fig_extra = create_figure(P3, GRIS, "Gasolina Extra")
 
-    corriente_table_data, corriente_table_columns = create_table_data(ims.P1)
-    acpm_table_data, acpm_table_columns = create_table_data(ims.P2)
-    extra_table_data, extra_table_columns = create_table_data(ims.P3)
+    corriente_table_data, corriente_table_columns = create_table_data(P1)
+    acpm_table_data, acpm_table_columns = create_table_data(P2)
+    extra_table_data, extra_table_columns = create_table_data(P3)
 
-    fig_corriente_fts = create_figure_fts(ims.P1, ims.VERDE, "Serie Completa - Gasolina Corriente")
-    fig_acpm_fts = create_figure_fts(ims.P2, ims.AZUL, "Serie Completa - ACPM")
-    fig_extra_fts = create_figure_fts(ims.P3, ims.GRIS, "Serie Completa - Extra")
+    fig_corriente_fts = create_figure_fts(P1, VERDE, "Serie Completa - Gasolina Corriente")
+    fig_acpm_fts = create_figure_fts(P2, AZUL, "Serie Completa - ACPM")
+    fig_extra_fts = create_figure_fts(P3, GRIS, "Serie Completa - Extra")
 
     return (fig_corriente, fig_acpm, fig_extra,
             corriente_table_data, corriente_table_columns,

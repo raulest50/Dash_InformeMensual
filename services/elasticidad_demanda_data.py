@@ -1,5 +1,5 @@
 
-from init_service import InitService
+from .init_service import InitService
 
 
 class ElasticidadDemandaService(InitService):
