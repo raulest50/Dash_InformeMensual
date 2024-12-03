@@ -25,6 +25,9 @@ openpyxl = "^3.1.5"
 
 
 
+[tool.poetry.group.dev.dependencies]
+deptry = "^0.21.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -22,6 +22,8 @@ def ensure_data_estructura_precios():
     if status == general.SCRATCH:
         scratch_initialization()
     elif status == general.OUTDATED:
+        if os.path.exists(DATA_DIR_ESTRUCTURA_PRECIOS):
+            os.rmdir(DATA_DIR_ESTRUCTURA_PRECIOS)
         scratch_initialization()
     elif status == general.UPTODATE:
         pass
