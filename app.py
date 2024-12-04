@@ -6,7 +6,7 @@ import Constants
 
 # Determine the environment
 ENV_APP_MODE = os.environ.get('APP_ENV', 'development')
-ENV_PORT = os.environ.get('PORT', '8050')  
+ENV_PORT = os.environ.get('PORT', 8050)
 
 # Initialize the Dash app with Bootstrap stylesheet
 app = dash.Dash(__name__, external_stylesheets=[
@@ -37,4 +37,4 @@ app.layout = html.Div([
 ])
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8050)
+    app.run(host='0.0.0.0', port=ENV_PORT)

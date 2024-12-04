@@ -8,3 +8,5 @@ __pycache__
 *.env
 prototyping_test/encuestas_eds/
 data/
+id_rsa
+id_rsa.pub
