@@ -77,6 +77,7 @@ def get_query_vmensual():
 
 class InformeMensualLoad:
     def __init__(self):
+        print("inicializando data informe mensual")
         ensure_data_vmensual()
         self.df = pd.read_csv(VMENSUAL_FILEPATH)
 

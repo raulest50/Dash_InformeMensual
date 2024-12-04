@@ -29,6 +29,7 @@ def get_query():
 class PqMotorLoad:
 
     def __init__(self):
+        print("inicializando data parque automotor")
         ensure_pq_motor_data()
         self.df = pd.read_csv(DF_MOTOR_FPATH)
         self.df['fecha_de_registro'] = self.df['fecha_de_registro'].astype(int)

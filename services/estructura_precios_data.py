@@ -110,6 +110,7 @@ def save_json(file_name, data):
 class EstructuraPreciosLoad:
 
     def __init__(self):
+        print("inicializando data estructura precios")
         ensure_data_estructura_precios()
         self.xlsx_links = self.load_json(URL_LIST_FPATH)
         self.lista_informes = self.load_json(LISTA_INFORMES_FPATH)

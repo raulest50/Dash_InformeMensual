@@ -247,6 +247,7 @@ def clean_city_name(name):
 
 class ElasticidadDemandaLoad:
     def __init__(self):
+        print("inicializando data elasticidad demanda")
         ensure_data_elasticidad_demanda()
         self.df_demanda = pd.read_csv(DF_DEMANDA_PATH)
         self.df_demanda['fecha'] = pd.to_datetime(
