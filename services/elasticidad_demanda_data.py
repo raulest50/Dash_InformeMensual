@@ -36,6 +36,7 @@ dc_map = {
 def ensure_data_elasticidad_demanda():
     os.makedirs(DATA_DIR_ELASTICIDAD_DEMANDA, exist_ok=True)
     if os.path.exists(DF_DEMANDA_PATH):
+        print(f"{__name__} : loaded local data ")
         return
     df_precios = extract_precios(upme_urls)
     df_precios['ciudad'] = df_precios['ciudad'].map(dc_map)

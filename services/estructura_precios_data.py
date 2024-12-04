@@ -42,6 +42,7 @@ def check_data_status():
 def scratch_initialization():
     os.makedirs(DATA_DIR_ESTRUCTURA_PRECIOS, exist_ok=True)  # se crea folder en carpeta persistente render.com
     if os.path.exists(DICT_FILEPATH):
+        print(f"{__name__} : loaded local data ")
         return
     lista_informes_tuple = scrape_url_list()
     lista_informes = [{'label': item[0], 'value': item[0]} for item in lista_informes_tuple]

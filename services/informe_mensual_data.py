@@ -56,6 +56,7 @@ def it_is_outdated():
 def scratch_initialization():
     os.makedirs(DATA_DIR_INF_MENSUAL, exist_ok=True)
     if os.path.exists(VMENSUAL_FILEPATH):
+        print(f"{__name__} : loaded local data ")
         return
     df = general.fetch_socrata_datosgov(get_query_vmensual(), DB_ALIAS_VOL_MAYORISTAS, 20)
     df.to_csv(VMENSUAL_FILEPATH, index=False)

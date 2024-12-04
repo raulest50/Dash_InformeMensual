@@ -12,6 +12,9 @@ BD_ALIAS = "u3vn-bdcy"
 
 def ensure_pq_motor_data():
     os.makedirs(DATA_DIR_INF_MENSUAL, exist_ok=True)
+    if os.path.exists(DF_MOTOR_FPATH):
+        print(f"{__name__} : loaded local data ")
+        return
     df = fetch_socrata_datosgov(get_query(), BD_ALIAS, 20)
     df.to_csv(DF_MOTOR_FPATH, index=False)
 

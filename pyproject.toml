@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["raulest50 <raulest50@gmail.com>"]
 readme = "README.md"
+package-mode = false  # Added this line
 
 [tool.poetry.dependencies]
 setuptools = "^75.2.0"
@@ -21,8 +22,6 @@ requests = "2.32.3"
 sodapy = "2.2.0"
 statsmodels = "0.14.4"
 openpyxl = "^3.1.5"
-
-
 
 [tool.poetry.group.dev.dependencies]
 deptry = "^0.21.1"
