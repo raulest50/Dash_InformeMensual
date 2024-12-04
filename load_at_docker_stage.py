@@ -5,7 +5,7 @@ from services.estructura_precios_data import ensure_data_estructura_precios
 from services.informe_mensual_data import ensure_data_vmensual
 from services.parque_automotor_data import ensure_pq_motor_data
 
-ensure_data_elasticidad_demanda()
+#ensure_data_elasticidad_demanda()
 ensure_data_estructura_precios()
 ensure_pq_motor_data()
 ensure_data_vmensual()
