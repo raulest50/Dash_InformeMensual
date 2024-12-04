@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 
 edl = ElasticidadDemandaLoad()
 
-#dash.register_page(__name__)
+dash.register_page(__name__)
 
 
 layout = dbc.Container([
