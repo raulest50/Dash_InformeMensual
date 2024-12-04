@@ -20,6 +20,7 @@ pytz = "2024.2"
 requests = "2.32.3"
 sodapy = "2.2.0"
 statsmodels = "0.14.4"
+openpyxl = "^3.1.5"
 
 
 
