@@ -2,8 +2,8 @@ import os
 import pandas as pd
 import unicodedata
 import re
-from services.upme_urls import upme_urls
-from services.general import P1, P2, C1, C2, C3, fetch_socrata_datosgov
+from data_integrity.upme_urls import upme_urls
+from data_integrity.general import P1, P2, C1, C2, C3, fetch_socrata_datosgov
 
 DATA_DIR_ELASTICIDAD_DEMANDA = 'data/elasticidad_demanda'
 DF_VOLS_FPATH = os.path.join(DATA_DIR_ELASTICIDAD_DEMANDA, "df_vols.csv")

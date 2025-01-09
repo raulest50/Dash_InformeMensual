@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import json
-import services.general as general
+import data_integrity.general as general
 
 DATA_DIR_ESTRUCTURA_PRECIOS = 'data/estructura_precios'
 DF_DICT_FNAME = 'df_dictionary.pkl'

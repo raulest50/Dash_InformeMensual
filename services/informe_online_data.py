@@ -1,6 +1,6 @@
 
 from datetime import datetime, timedelta
-import services.general as general
+import data_integrity.general as general
 
 
 DB_ALIAS_VOL_MAYORISTAS = "339g-zjac"

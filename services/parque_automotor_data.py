@@ -1,7 +1,7 @@
 
 import os
 import pandas as pd
-from services.general import fetch_socrata_datosgov
+from data_integrity.general import fetch_socrata_datosgov
 
 DATA_DIR_INF_MENSUAL = 'data/pq_motor'
 DF_MOTOR_FPATH = os.path.join(DATA_DIR_INF_MENSUAL, 'df_motor.csv')
