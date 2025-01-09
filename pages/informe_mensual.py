@@ -144,11 +144,7 @@ layout = dbc.Container([
             html.P(Constants.correo_esteban, style=style_text_bottom),
             html.P(Constants.cel_esteban, style=style_text_bottom),
         ], width=6),
-        dbc.Col([
-                html.P("Juan David Bonilla", style=style_text_bottom),
-                html.P(Constants.correo_juan, style=style_text_bottom),
-                html.P(Constants.cel_juan, style=style_text_bottom),
-        ], width=6)
+
     ], style={'padding': '2em'}),
 
 

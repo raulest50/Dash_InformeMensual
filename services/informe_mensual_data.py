@@ -6,7 +6,7 @@ from datetime import datetime
 from pytz import timezone
 import pandas as pd
 
-import data_integrity.general as general
+import services.general as general
 
 DB_ALIAS_VOL_MAYORISTAS = "339g-zjac"
 
