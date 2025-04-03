@@ -78,17 +78,6 @@ layout = dbc.Container([
     ]),
 
     # Footer
-    """
-        dbc.Row([
-            dbc.Col([
-                html.P("Raul Esteban Alzate", style=style_text_bottom),
-                html.P(Constants.correo_esteban, style=style_text_bottom),
-                html.P(Constants.cel_esteban, style=style_text_bottom),
-            ], width=6),
-
-        ], style={'padding': '2em'}),
-        """
-    ,
 
 ], fluid=True)
 
