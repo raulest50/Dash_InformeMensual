@@ -33,6 +33,7 @@ def data_integrity():
     print(f"df_old len: {len(df_old)}")
 
     df_new = general.fetch_socrata_datosgov(get_query_vmensual(), DB_ALIAS_VOL_MAYORISTAS, 20)
+    print(df_new)
     df_new["anio_despacho"] = pd.to_numeric(df_new["anio_despacho"], errors="coerce")
     df_new["mes_despacho"] = pd.to_numeric(df_new["mes_despacho"], errors="coerce")
     df_new["volumen_total"] = pd.to_numeric(df_new["volumen_total"], errors="coerce")
