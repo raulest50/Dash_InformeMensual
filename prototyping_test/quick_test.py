@@ -33,7 +33,7 @@ def get_product_counts():
 # dictionaries by sodapy.
 #results = client.get("339g-zjac", limit=2000)
 
-results = client.get(bd_eds, query=get_product_counts())
+results = client.get(bd_mayoristas, query=get_product_counts())
 
 # Convert to pandas DataFrame
 results_df = pd.DataFrame.from_records(results)
