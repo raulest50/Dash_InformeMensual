@@ -22,8 +22,8 @@ def get_query_vmensual():
 
 def get_product_counts():
     query = (
-        "SELECT producto, COUNT(*) AS count "
-        "GROUP BY producto "
+        "SELECT subtipo_comprador, COUNT(*) AS count "
+        "GROUP BY subtipo_comprador "
         "ORDER BY count DESC"
     ).format(general.C1, general.C2, general.C3)
     return query
@@ -45,3 +45,19 @@ results_df.to_csv("test.csv")
 #print(results_df['producto'].value_counts())
 
 
+"""
+los tipos de agentes compradores en la bd mayoristas
+
+                                   subtipo_comprador    count
+0                    ESTACION DE SERVICIO AUTOMOTRIZ  5443924
+1                         COMERCIALIZADOR INDUSTRIAL   383566
+2                   ESTACION DE SERVICIO DE AVIACION    84558
+3                               CON INSTALACION FIJA    70007
+4                      ESTACION DE SERVICIO MARITIMA    31565
+5                       ESTACION DE SERVICIO FLUVIAL    18265
+6  DISTRIBUIDOR MAYORISTA DE QUEMADORES INDUSTRIALES    14993
+7     CON INTALACION FIJA VOLUMEN MENOR A 20.000 GLS    10487
+8                           TEMPORAL CON INSTALACION    10287
+9    CON INSTALACION FIJA VOLUMEN MENOR A 20.000 GLS       46
+
+"""
