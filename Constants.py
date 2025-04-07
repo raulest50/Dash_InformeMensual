@@ -30,7 +30,8 @@ parrafoTop = """
     El mes se puede seleccionar mediante el DropDown menú.
 """
 
-parrafo_dt_source = """
+
+parrafo_dt_source_old_one = """
         Este informe es presentado por la Coordinación de Regulación y 
         Análisis de datos de COMCE, en la administración de los recursos parafiscales de SOLDICOM. 
         La fuente de los datos es el acceso remoto a Cubo Sicom otorgado por el Ministerio de Minas y Energía para COMCE-SOLDICOM. 
@@ -40,20 +41,30 @@ parrafo_dt_source = """
         ciudad en específico favor contactarse con la Coordinación.
 """
 
+
+parrafo_dt_source = """
+        Este informe es presentado por la Coordinación de Regulación y 
+        Análisis de datos de COMCE. La fuente de los datos es el acceso a las bases de datos abiertas de Sicom. 
+        Los datos reportan el volumen agregado del sector, a nivel país, reporte de ventas de combustibles líquidos a 
+        través de los agentes compradores COMERCIALIZADOR INDUSTRIAL, ESTACION DE SERVICIO AUTOMOTRIZ y ESTACION DE SERVICIO FLUVIAL.
+        Se incluyeron Zonas de frontera. *Si se requieren datos de un departamento, municipio o
+        ciudad en específico favor contactarse con la Coordinación.
+"""
+
 # seleccionar el mes actual para t'odo el texto de conclusion al final del dashboard
-current_mes_informe = 'enero'
-current_mes_elaboracion = 'enero'
+current_mes_informe = 'marzo'
+current_mes_elaboracion = 'abril'
 
 def Gen_parrafoBottom():
 
     #mes_str = get_mes_name(mes)
 
     return f"""
-        Reporte mensual de la variación de ventas {current_mes_informe} 2024 (conclusión generada el 31 de {current_mes_elaboracion} de 2025): 
-        El informe mensual refleja una variación relativa positiva en el consumo de gasolina corriente de -4,82% 
-        respecto al mes de {current_mes_informe} en 2024. Para el caso de ACPM se reporta 
-        un aumento de 0,6%. 
-        Las ventas de gasolina extra reportan un repunte positivo del 26,47% para el mes de {current_mes_informe}.
+        Reporte mensual de la variación de ventas {current_mes_informe} 2025 (conclusión generada el 07 de {current_mes_elaboracion} de 2025): 
+        El informe mensual refleja una variación relativa positiva en el consumo de gasolina corriente de 2,67% 
+        respecto al mes de {current_mes_informe} en 2025. Para el caso de ACPM se reporta 
+        un aumento de 11,84%. 
+        Las ventas de gasolina extra reportan un repunte positivo del 35,89% para el mes de {current_mes_informe}.
         """
         #Más información contactarse a los siguiente canal:
         #"""
