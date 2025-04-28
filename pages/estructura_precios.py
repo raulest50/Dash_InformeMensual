@@ -25,7 +25,7 @@ layout = dbc.Container([
                 html.H1(" Estructura de Precios Combustibles Liquidos ", style=style_header1)
             ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
             dbc.Col([
-                html.Img(src='../assets/logoComce-Soldicom.png', style={'width': '100%', 'height': 'auto'}),
+                html.Img(src='../assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
             ], width=3, xl=3, lg=3, md=6, sm=6, xs=12),
         ], justify='center', align='center', style={'padding': '2em'}),
 
@@ -101,18 +101,6 @@ layout = dbc.Container([
     ], style={'padding': '2em'}),
 
 
-    dbc.Row([
-            dbc.Col([
-                html.P("Raul Esteban Alzate", style=style_text_bottom),
-                html.P(Constants.correo_esteban, style=style_text_bottom),
-                html.P(Constants.cel_esteban, style=style_text_bottom),
-            ], width=6),
-            dbc.Col([
-                    html.P("Juan David Bonilla", style=style_text_bottom),
-                    html.P(Constants.correo_juan, style=style_text_bottom),
-                    html.P(Constants.cel_juan, style=style_text_bottom),
-            ], width=6)
-        ], style={'padding': '2em'}),
 
 ], fluid=True)
 

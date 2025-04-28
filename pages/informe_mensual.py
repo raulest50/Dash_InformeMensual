@@ -26,7 +26,7 @@ layout = dbc.Container([
             html.H1(" Reporte Mensual Ventas Combustible Liquido", style=style_header1)
         ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
         dbc.Col([
-            html.Img(src='/assets/logoComce-Soldicom.png', style={'width': '100%', 'height': 'auto'}),
+            html.Img(src='/assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
         ], width=3, xl=3, lg=3, md=6, sm=6, xs=12),
     ], justify='center', align='center', style={'padding': '2em'}),
 
@@ -130,23 +130,13 @@ layout = dbc.Container([
 
     dbc.Row([
         dbc.Col([
-            html.H2(f"RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS {Constants.current_mes_informe.upper()} 2024", style=style_H2),
+            html.H2(f"RESUMEN EJECUTIVO INFORME MENSUAL DE VENTAS {Constants.current_mes_informe.upper()} 2025", style=style_H2),
             html.H3("Información sobre la fuente de datos.", style=style_H3),
             html.P(Constants.parrafo_dt_source, style=style_text_bottom),
-            html.H3(f"Reporte mensual de la variación de ventas {Constants.current_mes_informe.upper()} 2024:", style=style_H3),
+            html.H3(f"Reporte mensual de la variación de ventas {Constants.current_mes_informe.upper()} 2025:", style=style_H3),
             html.P(Constants.Gen_parrafoBottom(), style=style_text_bottom),
         ])
     ], style={'padding': '2em'}),
-
-    dbc.Row([
-        dbc.Col([
-            html.P("Raul Esteban Alzate", style=style_text_bottom),
-            html.P(Constants.correo_esteban, style=style_text_bottom),
-            html.P(Constants.cel_esteban, style=style_text_bottom),
-        ], width=6),
-
-    ], style={'padding': '2em'}),
-
 
     # Define the modal
     dbc.Modal(
