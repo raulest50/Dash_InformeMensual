@@ -10,11 +10,11 @@ def get_query_vmensual():
         f"AND producto IN ('{general.P1}', '{general.P2}', '{general.P3}') "
         f"GROUP BY anio_despacho, mes_despacho, producto, municipio "
         f"ORDER BY anio_despacho ASC "
-        f"LIMIT 250000"
+        f"LIMIT 850000"
     )
     return query
 
 
-df_vmensual_newf = general.fetch_socrata_datosgov(get_query_vmensual(), DB_ALIAS_VOL_MAYORISTAS, 20)
-df_vmensual_newf.to_csv("vmensual_7_4_2025.csv.csv", index=False)
+df_fresh = general.fetch_socrata_datosgov(get_query_vmensual(), DB_ALIAS_VOL_MAYORISTAS, 20)
+df_fresh.to_csv("vmensual_fresh.csv", index=False)
 
