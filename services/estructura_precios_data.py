@@ -8,7 +8,9 @@ import pandas as pd
 import json
 import services.general as general
 
-DATA_DIR_ESTRUCTURA_PRECIOS = 'data/estructura_precios'
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR_ESTRUCTURA_PRECIOS = os.path.join(PROJECT_ROOT, 'data', 'estructura_precios')
+
 DF_DICT_FNAME = 'df_dictionary.pkl'
 DICT_FILEPATH = os.path.join(DATA_DIR_ESTRUCTURA_PRECIOS, DF_DICT_FNAME)
 
@@ -16,27 +18,6 @@ URL_LIST_FPATH = os.path.join(DATA_DIR_ESTRUCTURA_PRECIOS, 'xlsx_links.json')
 LISTA_INFORMES_FPATH = os.path.join(DATA_DIR_ESTRUCTURA_PRECIOS, 'lista_informes.json')
 COLS_CIUDADES_FPATH = os.path.join(DATA_DIR_ESTRUCTURA_PRECIOS, 'columnas_ciudades.json')
 
-
-def ensure_data_estructura_precios():
-    status = check_data_status()
-    if status == general.SCRATCH:
-        scratch_initialization()
-    elif status == general.OUTDATED:
-        if os.path.exists(DATA_DIR_ESTRUCTURA_PRECIOS):
-            os.rmdir(DATA_DIR_ESTRUCTURA_PRECIOS)
-        scratch_initialization()
-    elif status == general.UPTODATE:
-        pass
-
-
-def check_data_status():
-    status = general.SCRATCH
-    if os.path.exists(DATA_DIR_ESTRUCTURA_PRECIOS) and os.path.exists(DICT_FILEPATH):
-        if it_is_outdated():
-            status = general.OUTDATED
-        else:
-            status = general.UPTODATE
-    return status
 
 
 def scratch_initialization():
@@ -101,9 +82,6 @@ def get_dataframes_dict(lista_informes_tuple):
     return r
 
 
-def it_is_outdated():
-    pass
-
 
 def save_json(file_name, data):
     with open(file_name, 'w', encoding='utf-8') as f:  # save to a file
@@ -114,7 +92,6 @@ class EstructuraPreciosLoad:
 
     def __init__(self):
         print("inicializando data estructura precios")
-        ensure_data_estructura_precios()
         self.xlsx_links = self.load_json(URL_LIST_FPATH)
         self.lista_informes = self.load_json(LISTA_INFORMES_FPATH)
         self.columnas_ciudades = self.load_json(COLS_CIUDADES_FPATH)
@@ -124,4 +101,46 @@ class EstructuraPreciosLoad:
     def load_json(self, filename):
         with open(filename, 'r', encoding='utf-8') as f:
             return json.load(f)
+
+    def update_missing_months(self):
+        # Load the current dictionary
+        updated_df_dictionary = self.df_dictionary.copy()
+
+        for month_year, link in self.xlsx_links:
+            if month_year not in updated_df_dictionary:
+                print(f"Adding missing month: {month_year}")
+                try:
+                    # Download and generate the DataFrames
+                    new_corriente_df, new_acpm_df = excel_url_to_df(link, DATA_DIR_ESTRUCTURA_PRECIOS)
+                    updated_df_dictionary[month_year] = [(new_corriente_df, new_acpm_df)]
+                except Exception as e:
+                    print(f"Failed to add {month_year}: {e}")
+            else:
+                print(f"Month {month_year} already present, skipping.")
+
+        # Save the updated dictionary back to the pkl
+        with open(DICT_FILEPATH, 'wb') as file:
+            pickle.dump(updated_df_dictionary, file)
+
+        print("Update complete.")
+
+
+def pkl_print():
+    #print(DICT_FILEPATH)
+    #pdd = pd.read_pickle(DICT_FILEPATH)
+    #print(pdd)
+    print({k: (v[0][0].shape, v[0][1].shape) for k, v in pd.read_pickle(DICT_FILEPATH).items()})
+
+
+
+
+"""
+se deben agregar los nuevos links manualmente en xlsx_links.json y
+las etiquetas en lista_informer.json. luego este main hace el resto
+"""
+if __name__ == "__main__":
+    #pkl_print()
+    #loader = EstructuraPreciosLoad()
+    #loader.update_missing_months()
+    pkl_print()
 
