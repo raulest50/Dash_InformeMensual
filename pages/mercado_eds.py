@@ -146,6 +146,12 @@ layout = dbc.Container([
     # Store for selected SICOM code
     dcc.Store(id='selected-sicom'),
 
+    # Store for EDS data (for client-side processing)
+    dcc.Store(id='eds-data-store', storage_type='memory'),
+
+    # Store for processed data (from client-side processing)
+    dcc.Store(id='processed-data-store', storage_type='memory'),
+
 ], fluid=True)
 
 # Callback to update selected SICOM from input or dropdown
@@ -477,3 +483,45 @@ def update_market_map(sicom_code):
     )
 
     return fig
+
+# Callback to load basic data for client-side processing
+@callback(
+    Output('eds-data-store', 'data'),
+    Input('selected-sicom', 'data'),
+    prevent_initial_call=True
+)
+def load_basic_data(sicom_code):
+    if not sicom_code:
+        return {}
+
+    # Cargar solo datos esenciales
+    basic_data = meds.get_minimal_data(sicom_code)
+    return basic_data
+
+# Client-side callback to process data in the browser
+dash.clientside_callback(
+    """
+    function(data) {
+        // Procesamiento en el cliente
+        if (!data || !data.competitors) return {};
+
+        // Ejemplo: calcular estadísticas simples
+        let processedData = {
+            competitorCount: data.competitors.length,
+            brandDistribution: {}
+        };
+
+        // Contar banderas
+        data.competitors.forEach(comp => {
+            if (!processedData.brandDistribution[comp.bandera]) {
+                processedData.brandDistribution[comp.bandera] = 0;
+            }
+            processedData.brandDistribution[comp.bandera]++;
+        });
+
+        return processedData;
+    }
+    """,
+    Output('processed-data-store', 'data'),
+    Input('eds-data-store', 'data')
+)

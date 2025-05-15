@@ -10,28 +10,54 @@ class MercadoEDSLoad:
 
     def __init__(self):
         """
-        Initialize the data loader and load the data.
+        Initialize the data loader and load only the SICOM codes.
         """
         self.df = None
-        self.load_data()
+        self.sicom_codes = []
+        self.load_data()  # Solo cargará los códigos SICOM, no todo el dataset
 
-    def load_data(self):
+    def load_data(self, sicom_code=None):
         """
-        Load the data from the CSV file.
+        Load the data from the CSV file, optionally filtering by SICOM code.
         """
         try:
-            # Load the data from the CSV file
             file_path = os.path.join('data', 'mercado_eds', 'info_mercado.csv')
-            self.df = pd.read_csv(file_path, sep=';', encoding='utf-8', decimal=',')
 
-            # Convert coordinates to float
-            self.df['Coord_X'] = pd.to_numeric(self.df['Coord_X'], errors='coerce')
-            self.df['Coord_Y'] = pd.to_numeric(self.df['Coord_Y'], errors='coerce')
-            self.df['Coord_X_Com'] = pd.to_numeric(self.df['Coord_X_Com'], errors='coerce')
-            self.df['Coord_Y_Com'] = pd.to_numeric(self.df['Coord_Y_Com'], errors='coerce')
+            if sicom_code is not None:
+                # Solo cargar las filas relevantes para el código SICOM específico
+                # Usar la función read_csv con parámetros para filtrar durante la carga
+                self.df = pd.read_csv(
+                    file_path, 
+                    sep=';', 
+                    encoding='utf-8', 
+                    decimal=',',
+                    usecols=lambda x: x in [
+                        'SICOM', 'COMPETIDOR', 'NOMBRE COMERCIAL', 'BANDERA',
+                        'Coord_X', 'Coord_Y', 'DEPARTAMENTO', 'MUNICIPIO', 'URBANO',
+                        'IHH_ACPM', 'IHH_CORRIENTE', 'IHH_EXTRA2', 
+                        'Stenbacka_ACPM', 'Stenbacka_CORRIENTE', 'Stenbacka_EXTRA',
+                        'Coord_X_Com', 'Coord_Y_Com', 'Nom_Com', 'BANDERA_COM', 'DISTANCIA'
+                    ]
+                )
+                # Filtrar solo para el código SICOM solicitado
+                self.df = self.df[self.df['SICOM'] == sicom_code]
 
-            # Get unique SICOM codes for dropdown
-            self.sicom_codes = sorted(self.df['SICOM'].unique())
+                # Convert coordinates to float
+                self.df['Coord_X'] = pd.to_numeric(self.df['Coord_X'], errors='coerce')
+                self.df['Coord_Y'] = pd.to_numeric(self.df['Coord_Y'], errors='coerce')
+                self.df['Coord_X_Com'] = pd.to_numeric(self.df['Coord_X_Com'], errors='coerce')
+                self.df['Coord_Y_Com'] = pd.to_numeric(self.df['Coord_Y_Com'], errors='coerce')
+            else:
+                # Para la inicialización, solo cargar los códigos SICOM únicos
+                sicom_df = pd.read_csv(
+                    file_path, 
+                    sep=';', 
+                    encoding='utf-8',
+                    usecols=['SICOM']
+                )
+                self.sicom_codes = sorted(sicom_df['SICOM'].unique())
+                # Liberar memoria
+                self.df = None
 
         except Exception as e:
             print(f"Error loading data: {e}")
@@ -48,6 +74,10 @@ class MercadoEDSLoad:
         Returns:
             dict: A dictionary with the EDS details.
         """
+        # Cargar datos solo para este código SICOM si aún no están cargados
+        if self.df is None or len(self.df) == 0 or self.df['SICOM'].iloc[0] != sicom_code:
+            self.load_data(sicom_code)
+
         if self.df is None or self.df.empty:
             return {}
 
@@ -91,6 +121,10 @@ class MercadoEDSLoad:
                 ['SICOM', 'Nombre Comercial', 'Bandera', 'Longitud', 'Latitud', 'Distancia'].
                 Longitude/latitude columns will be strings (empty if missing).
         """
+        # Cargar datos solo para este código SICOM si aún no están cargados
+        if self.df is None or len(self.df) == 0 or self.df['SICOM'].iloc[0] != sicom_code:
+            self.load_data(sicom_code)
+
         # If there's no data loaded, return empty DataFrame
         if self.df is None or self.df.empty:
             return pd.DataFrame()
@@ -144,6 +178,10 @@ class MercadoEDSLoad:
         Returns:
             DataFrame: A DataFrame with the brand distribution.
         """
+        # Cargar datos solo para este código SICOM si aún no están cargados
+        if self.df is None or len(self.df) == 0 or self.df['SICOM'].iloc[0] != sicom_code:
+            self.load_data(sicom_code)
+
         if self.df is None or self.df.empty:
             return pd.DataFrame()
 
@@ -166,6 +204,10 @@ class MercadoEDSLoad:
         Returns:
             dict: A dictionary with the map data.
         """
+        # Cargar datos solo para este código SICOM si aún no están cargados
+        if self.df is None or len(self.df) == 0 or self.df['SICOM'].iloc[0] != sicom_code:
+            self.load_data(sicom_code)
+
         if self.df is None or self.df.empty:
             return {'eds': {}, 'competitors': []}
 
@@ -210,4 +252,41 @@ class MercadoEDSLoad:
         return {
             'eds': eds_map_data,
             'competitors': competitors_map_data
+        }
+
+    def get_minimal_data(self, sicom_code):
+        """
+        Get minimal data for client-side processing.
+
+        Args:
+            sicom_code (str): The SICOM code of the EDS.
+
+        Returns:
+            dict: A dictionary with minimal data for client-side processing.
+        """
+        # Cargar datos solo para este código SICOM si aún no están cargados
+        if self.df is None or len(self.df) == 0 or self.df['SICOM'].iloc[0] != sicom_code:
+            self.load_data(sicom_code)
+
+        if self.df is None or self.df.empty:
+            return {}
+
+        # Get EDS details
+        eds_details = self.get_eds_details(sicom_code)
+
+        # Get competitors data in a simplified format for client-side processing
+        competitors_data = []
+        competitors = self.df[self.df['SICOM'] == sicom_code].copy()
+
+        for _, comp in competitors.iterrows():
+            competitors_data.append({
+                'sicom': comp['COMPETIDOR'],
+                'nombre': comp['Nom_Com'],
+                'bandera': comp['BANDERA_COM'],
+                'distancia': comp['DISTANCIA']
+            })
+
+        return {
+            'eds': eds_details,
+            'competitors': competitors_data
         }

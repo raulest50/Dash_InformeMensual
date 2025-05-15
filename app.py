@@ -8,6 +8,7 @@ import Constants
 # Determine the environment
 ENV_APP_MODE = os.environ.get('APP_ENV', 'development')
 ENV_PORT = os.environ.get('PORT', 8050)
+DEBUG = os.environ.get('DEBUG', True)
 
 # Initialize the Dash app
 app = dash.Dash(
@@ -60,4 +61,4 @@ app.layout = html.Div([
 ])
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=ENV_PORT, debug=True)
+    app.run(host='0.0.0.0', port=ENV_PORT, debug=DEBUG)
