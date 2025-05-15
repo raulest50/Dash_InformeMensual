@@ -4,6 +4,19 @@ verde = "#41B75C"
 azul = "#0D6ABF"
 gris = "#808080"
 
+# Colores corporativos de banderas de EDS
+brand_colors = {
+    "TEXACO": "#E93330",
+    "PRIMAX": "#652D91",
+    "CHEVRON": "#E21836",
+    "PETROBRAS": "#007F3F",
+    "BIOMAX": "#D72600",
+    "ZEUSS": "#0056A3",
+    "PUMA": "#BA2026",
+    "OCTANO": "#C8102E",
+    # Agregar más colores según sea necesario
+}
+
 correo_esteban = "ralzate@comce-soldicom.com"
 cel_esteban = "+57 313 515 86 11"
 correo_juan = "jbonilla@comce-soldicom.com"
@@ -282,5 +295,3 @@ zdf_list = ['ABREGO', 'ACANDI', 'AGUACHICA', 'AGUSTIN CODAZZI', 'ALBAN', 'ALBANI
             'SIBUNDOY', 'TAME', 'TAMINANGO', 'TANGUA', 'TARAIRA', 'TEORAMA', 'TIBU', 'TOLEDO', 'TUQUERRES', 'UNGUIA',
             'URIBIA', 'URUMITA', 'VALLE DEL GUAMUEZ', 'VALLEDUPAR', 'VILLA DEL ROSARIO', 'VILLAGARZON', 'VILLANUEVA',
             'YACUANQUER', 'INIRIDA']
-
-
