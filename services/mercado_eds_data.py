@@ -22,7 +22,7 @@ class MercadoEDSLoad:
         try:
             # Load the data from the CSV file
             file_path = os.path.join('data', 'mercado_eds', 'info_mercado.csv')
-            self.df = pd.read_csv(file_path, sep=';', encoding='utf-8')
+            self.df = pd.read_csv(file_path, sep=';', encoding='utf-8', decimal=',')
 
             # Convert coordinates to float
             self.df['Coord_X'] = pd.to_numeric(self.df['Coord_X'], errors='coerce')
@@ -84,35 +84,53 @@ class MercadoEDSLoad:
         Get the competitors for a specific EDS.
 
         Args:
-            sicom_code (str): The SICOM code of the EDS.
+            sicom_code (int or str): The SICOM code of the EDS.
 
         Returns:
-            DataFrame: A DataFrame with the competitors.
+            DataFrame: A DataFrame with columns
+                ['SICOM', 'Nombre Comercial', 'Bandera', 'Longitud', 'Latitud', 'Distancia'].
+                Longitude/latitude columns will be strings (empty if missing).
         """
+        # If there's no data loaded, return empty DataFrame
         if self.df is None or self.df.empty:
             return pd.DataFrame()
 
-        # Filter for the specific EDS's competitors
+        # Filter to only the rows matching the requested SICOM
         competitors = self.df[self.df['SICOM'] == sicom_code].copy()
 
-        # Select only the competitor columns
-        competitor_cols = ['COMPETIDOR', 'Nom_Com', 'BANDERA_COM', 'Coord_X_Com', 'Coord_Y_Com', 'DISTANCIA']
+        # Keep only the relevant columns
+        competitor_cols = [
+            'COMPETIDOR',  # will become SICOM
+            'Nom_Com',  # Nombre Comercial
+            'BANDERA_COM',  # Bandera
+            'Coord_X_Com',  # Longitud (string→float→string)
+            'Coord_Y_Com',  # Latitud  (string→float→string)
+            'DISTANCIA'  # Distancia
+        ]
         competitors = competitors[competitor_cols].copy()
 
-        # Ensure coordinates are numeric and handle NaN values
-        competitors['Coord_X_Com'] = pd.to_numeric(competitors['Coord_X_Com'], errors='coerce')
-        competitors['Coord_Y_Com'] = pd.to_numeric(competitors['Coord_Y_Com'], errors='coerce')
+        # Normalize the decimal separator and convert to numeric
+        for col in ['Coord_X_Com', 'Coord_Y_Com']:
+            competitors[col] = (
+                competitors[col]
+                .astype(str)  # ensure we can call .str.replace
+                .str.replace(',', '.', regex=False)
+                .pipe(pd.to_numeric, errors='coerce')
+            )
 
-        # Fill NaN values with empty string to avoid displaying 'NaN' in the table
+        # Fill NaN with empty string and cast back to str for display
         competitors['Coord_X_Com'] = competitors['Coord_X_Com'].fillna('').astype(str)
         competitors['Coord_Y_Com'] = competitors['Coord_Y_Com'].fillna('').astype(str)
 
-        # Remove trailing zeros and decimal point if it's a whole number
-        competitors['Coord_X_Com'] = competitors['Coord_X_Com'].apply(lambda x: x if x == '' else x.rstrip('0').rstrip('.') if '.' in x else x)
-        competitors['Coord_Y_Com'] = competitors['Coord_Y_Com'].apply(lambda x: x if x == '' else x.rstrip('0').rstrip('.') if '.' in x else x)
-
-        # Rename columns for clarity
-        competitors.columns = ['SICOM', 'Nombre Comercial', 'Bandera', 'Longitud', 'Latitud', 'Distancia']
+        # Rename columns for the table
+        competitors.columns = [
+            'SICOM',
+            'Nombre Comercial',
+            'Bandera',
+            'Longitud',
+            'Latitud',
+            'Distancia'
+        ]
 
         return competitors
 
