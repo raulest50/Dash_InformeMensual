@@ -15,18 +15,13 @@ python -m pipx ensurepath # Add pipx to PATH
 pipx install poetry
 ```
 
-## Funcionamiento De Cada Pagina de la Dash App
+## Medicion Consumo de RAM de la Aplicacion
 
-### Informe mensual
-
-
-### Estructura De Precios
-
-
-### Informe En Linea
-
-
-### Elasticidad de la Demanda
-
-
-### Parque Automotor
+para estimar el consumo de ram se usa psutil pero este solo esta disponible
+como un module en dev mode. corriendolo con la app run configuration no 
+encontraba el modulo. Pero ejecutando:
+```
+poetry run python app.py
+```
+si me funcionaba con psutil y muestra un burbuja en la esquina inferior 
+izquierda con la estimacion del consumo de RAM
