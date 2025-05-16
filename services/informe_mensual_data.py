@@ -14,18 +14,18 @@ DB_ALIAS_VOL_MAYORISTAS = "339g-zjac"
 def get_vmensual_fpath():
     if __name__ == "__main__":
         DATA_DIR_INF_MENSUAL_MAIN = '../data/informe_mensual/'
-        return os.path.join(DATA_DIR_INF_MENSUAL_MAIN, 'vmensual.csv')
+        return os.path.join(DATA_DIR_INF_MENSUAL_MAIN, 'vmensual.parquet')
     else:
         DATA_DIR_INF_MENSUAL = 'data/informe_mensual'
-        return os.path.join(DATA_DIR_INF_MENSUAL, 'vmensual.csv')
+        return os.path.join(DATA_DIR_INF_MENSUAL, 'vmensual.parquet')
 
 
 def get_vmensual():
     VMENSUAL_FILEPATH = get_vmensual_fpath()
     if os.path.exists(VMENSUAL_FILEPATH):
-        return pd.read_csv(VMENSUAL_FILEPATH)
+        return pd.read_parquet(VMENSUAL_FILEPATH, engine='pyarrow')
     else:
-        print("scratch intilizacion for vmensual.csv")
+        print("scratch intilizacion for vmensual.parquet")
         return pd.DataFrame()
 
 def data_integrity():
@@ -47,7 +47,7 @@ def data_integrity():
     )
 
     print(f"df_union len: {len(df_union)}")
-    df_union.to_csv(get_vmensual_fpath(), index=False)
+    df_union.to_parquet(get_vmensual_fpath(), engine='pyarrow', index=False)
 
 
 def get_query_vmensual():
@@ -72,5 +72,3 @@ class InformeMensualLoad:
 
 if __name__ == "__main__":
     data_integrity()
-
-

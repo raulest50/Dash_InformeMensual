@@ -18,20 +18,18 @@ class MercadoEDSLoad:
 
     def load_data(self, sicom_code=None):
         """
-        Load the data from the CSV file, optionally filtering by SICOM code.
+        Load the data from the Parquet file, optionally filtering by SICOM code.
         """
         try:
-            file_path = os.path.join('data', 'mercado_eds', 'info_mercado.csv')
+            file_path = os.path.join('data', 'mercado_eds', 'info_mercado.parquet')
 
             if sicom_code is not None:
                 # Solo cargar las filas relevantes para el código SICOM específico
-                # Usar la función read_csv con parámetros para filtrar durante la carga
-                self.df = pd.read_csv(
-                    file_path, 
-                    sep=';', 
-                    encoding='utf-8', 
-                    decimal=',',
-                    usecols=lambda x: x in [
+                # Usar la función read_parquet con parámetros para filtrar durante la carga
+                self.df = pd.read_parquet(
+                    file_path,
+                    engine='pyarrow',
+                    columns=[
                         'SICOM', 'COMPETIDOR', 'NOMBRE COMERCIAL', 'BANDERA',
                         'Coord_X', 'Coord_Y', 'DEPARTAMENTO', 'MUNICIPIO', 'URBANO',
                         'IHH_ACPM', 'IHH_CORRIENTE', 'IHH_EXTRA2', 
@@ -49,11 +47,10 @@ class MercadoEDSLoad:
                 self.df['Coord_Y_Com'] = pd.to_numeric(self.df['Coord_Y_Com'], errors='coerce')
             else:
                 # Para la inicialización, solo cargar los códigos SICOM únicos
-                sicom_df = pd.read_csv(
-                    file_path, 
-                    sep=';', 
-                    encoding='utf-8',
-                    usecols=['SICOM']
+                sicom_df = pd.read_parquet(
+                    file_path,
+                    engine='pyarrow',
+                    columns=['SICOM']
                 )
                 self.sicom_codes = sorted(sicom_df['SICOM'].unique())
                 # Liberar memoria

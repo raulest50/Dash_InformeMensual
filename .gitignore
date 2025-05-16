@@ -1,4 +1,3 @@
-
 *.csv
 .idea
 .venv
@@ -14,3 +13,4 @@ id_rsa2
 id_rsa2.ppk
 id_rsa2.pub
 .junie/temp
+old_csv_files
