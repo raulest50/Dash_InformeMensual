@@ -153,24 +153,31 @@ style_drop_label = {
 
 
 style_navbar = {
-    'padding': '0.5em',
-    'margin': '0.2em',
-    'paddingTop': '1em',
-    'paddingBottom': '1em',
-    'backgroundColor': f'{verde}'
+    'padding': '0.8em',
+    'margin': '0',
+    'backgroundColor': f'{verde}',
+    'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)',
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center',
+    'marginBottom': '20px'
 }
 
 
 style_navbar_col = {
     'fontFamily': "'Plus Jakarta Sans', sans-serif",
     'fontSize': '1.2em',
-    'textAlign': 'justify'
+    'textAlign': 'center',
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center'
 }
 
 style_navbar_link = {
     'color': 'black',
-    'marginTop': '0.5em',
-    'marginBottom': '0.5em',
+    'padding': '10px 15px',
+    'fontWeight': '500',
+    'textDecoration': 'none'
 }
 
 

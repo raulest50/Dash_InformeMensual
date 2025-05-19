@@ -26,7 +26,7 @@ app = dash.Dash(
     __name__,
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
-        "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap",
+        "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap",
         dbc.icons.BOOTSTRAP,
     ],
     suppress_callback_exceptions=True,
@@ -78,10 +78,10 @@ app.layout = html.Div([
         dbc.Row([
             dbc.Col(
                 html.Div(
-                    dcc.Link(f"{page['name']}", href=page["relative_path"], style=Constants.style_navbar_link)
+                    dcc.Link(f"{page['name']}", href=page["relative_path"], style=Constants.style_navbar_link, className="navbar-link")
                 ), style=Constants.style_navbar_col, width=3
             ) for page in dash.page_registry.values()
-        ], style=Constants.style_navbar),
+        ], style=Constants.style_navbar, className="navbar-container"),
     ]),
     dash.page_container,
     # Añadir el monitor de memoria solo en desarrollo y si psutil está disponible
