@@ -28,16 +28,7 @@ RUN apt-get update && \
 COPY --from=builder /app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create non-root user
-RUN adduser --disabled-password --gecos "" appuser
-
 COPY . .
-
-# Set ownership to non-root user
-RUN chown -R appuser:appuser /app
-
-# Switch to non-root user
-USER appuser
 
 EXPOSE 8050
 
