@@ -5,3 +5,7 @@ services:
     build: .
     ports:
       - "8050:8050"
+    environment:
+      - APP_ENV=production
+      - DEBUG=False
+    restart: unless-stopped
