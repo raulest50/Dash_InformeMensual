@@ -12,7 +12,7 @@ COPY pyproject.toml poetry.lock ./
 
 # Configure poetry and export dependencies to requirements.txt
 RUN poetry config virtualenvs.create false && \
-    poetry export -f requirements.txt > requirements.txt
+    poetry export --format requirements.txt --output requirements.txt
 
 # Second stage: final image
 FROM python:3.12-slim
