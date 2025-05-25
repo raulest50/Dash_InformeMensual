@@ -6,7 +6,8 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y openssh-client && \
     rm -rf /var/lib/apt/lists/* && \
-    pip install poetry
+    pip install poetry && \
+    poetry self add poetry-plugin-export
 
 COPY pyproject.toml poetry.lock ./
 
