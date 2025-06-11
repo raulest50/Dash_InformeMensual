@@ -1,9 +1,8 @@
 # standar lib imports
 import os
+import json
 
 # 3rd party imports
-from datetime import datetime
-from pytz import timezone
 import pandas as pd
 
 import services.general as general
@@ -40,7 +39,44 @@ def data_integrity():
 
     print(f"df_new len: {len(df_new)}")
 
-    KEYS = ["anio_despacho", "mes_despacho", "producto", "municipio"]
+    # Check if departamento column exists in df_old
+    if 'departamento' not in df_old.columns:
+        print("departamento column not found in old data, adding it using mapping...")
+        # Load the municipio-departamento mapping
+        # Get the directory where vmensual.parquet is located
+        vmensual_dir = os.path.dirname(get_vmensual_fpath())
+        mapping_file = os.path.join(vmensual_dir, 'municipio_departamento_mapping.json')
+
+        print(f"Looking for mapping file at: {mapping_file}")
+
+        if os.path.exists(mapping_file):
+            print(f"Mapping file found at: {mapping_file}")
+            with open(mapping_file, 'r', encoding='utf-8') as f:
+                mapping_dict = json.load(f)
+            # Add departamento column using the mapping
+            df_old['departamento'] = df_old['municipio'].map(mapping_dict)
+            print(f"Added departamento column to old data using mapping")
+        else:
+            # Try to run the mapping script to create the mapping file
+            print(f"Mapping file not found, attempting to create it...")
+            try:
+                # Import the mapping script
+                import sys
+                sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'prototyping_test'))
+                from prototyping_test.adicion_departamento_col.municipio_departamento_mapping import create_municipio_departamento_mapping
+
+                # Create the mapping
+                mapping_dict, _ = create_municipio_departamento_mapping()
+
+                # Add departamento column using the mapping
+                df_old['departamento'] = df_old['municipio'].map(mapping_dict)
+                print(f"Added departamento column to old data using newly created mapping")
+            except Exception as e:
+                print(f"Error creating mapping: {str(e)}")
+                print(f"Warning: Could not create mapping, departamento column will have NaN values")
+                df_old['departamento'] = None
+
+    KEYS = ["anio_despacho", "mes_despacho", "producto", "municipio", "departamento"]
     df_union = (
         pd.concat([df_old, df_new], ignore_index=True)
         .drop_duplicates(subset=KEYS, keep="last")
@@ -52,10 +88,10 @@ def data_integrity():
 
 def get_query_vmensual():
     query = (
-        f"SELECT SUM(volumen_despachado) as volumen_total, anio_despacho, mes_despacho, producto, municipio "
+        f"SELECT SUM(volumen_despachado) as volumen_total, anio_despacho, mes_despacho, producto, municipio, departamento "
         f"WHERE subtipo_comprador IN ('{general.C1}', '{general.C2}', '{general.C3}') "
         f"AND producto IN ('{general.P1}', '{general.P2}', '{general.P3}') "
-        f"GROUP BY anio_despacho, mes_despacho, producto, municipio "
+        f"GROUP BY anio_despacho, mes_despacho, producto, municipio, departamento "
         f"ORDER BY anio_despacho ASC "
         f"LIMIT 250000"
     )

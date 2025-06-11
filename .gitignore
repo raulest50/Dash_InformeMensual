@@ -14,3 +14,7 @@ id_rsa2.ppk
 id_rsa2.pub
 .junie/temp
 old_csv_files
+/prototyping_test/output/
+/prototyping_test/entrevistaDavid_RCN.py
+/prototyping_test/consumo_mensual_tablas.py
+/prototyping_test/contar_estaciones_servicio.py
