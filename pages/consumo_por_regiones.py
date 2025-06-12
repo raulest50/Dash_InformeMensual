@@ -274,10 +274,10 @@ def create_interanual_content(df_dept, selected_month):
     # Crear fila para las gráficas
     graphs_row = dbc.Row([
         dbc.Col([
-            dcc.Graph(figure=create_figure(dfm, P1, AZUL, "Gasolina Corriente"))
+            dcc.Graph(figure=create_figure(dfm, P1, VERDE, "Gasolina Corriente"))
         ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
         dbc.Col([
-            dcc.Graph(figure=create_figure(dfm, P2, VERDE, "ACPM"))
+            dcc.Graph(figure=create_figure(dfm, P2, AZUL, "ACPM"))
         ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
         dbc.Col([
             dcc.Graph(figure=create_figure(dfm, P3, GRIS, "Gasolina Extra"))
@@ -304,6 +304,64 @@ def create_interanual_content(df_dept, selected_month):
 
     content.append(tables_row)
 
+    # Encontrar el municipio con mayor consumo dentro del departamento
+    # Crear una copia del dataframe original filtrado por el mes seleccionado
+    df_municipios = df_dept[df_dept['mes_despacho'] == selected_month].copy()
+
+    # Agrupar por municipio y producto, sumando los volúmenes
+    df_municipios_grouped = df_municipios.groupby(['municipio', 'producto'])['volumen_total'].sum().reset_index()
+
+    # Encontrar el municipio con mayor consumo total (sumando todos los productos)
+    municipio_total = df_municipios_grouped.groupby('municipio')['volumen_total'].sum().reset_index()
+    if not municipio_total.empty:
+        municipio_mayor_consumo = municipio_total.loc[municipio_total['volumen_total'].idxmax()]['municipio']
+
+        # Filtrar datos solo para el municipio con mayor consumo
+        df_municipio_mayor = df_municipios[df_municipios['municipio'] == municipio_mayor_consumo].copy()
+
+        # Agrupar por año y producto para el municipio con mayor consumo
+        dfm_municipio = df_municipio_mayor.groupby(['anio_despacho', 'mes_despacho', 'producto'])['volumen_total'].sum().reset_index()
+
+        # Título para la sección del municipio con mayor consumo
+        content.append(dbc.Row([
+            dbc.Col([
+                html.H3(f"Municipio con mayor consumo: {municipio_mayor_consumo}", style=style_H3)
+            ], width=12)
+        ], style={'padding': '2em 2em 1em 2em'}))
+
+        # Crear fila para las gráficas del municipio con mayor consumo
+        graphs_row_municipio = dbc.Row([
+            dbc.Col([
+                dcc.Graph(figure=create_figure(dfm_municipio, P1, VERDE, f"Gasolina Corriente - {municipio_mayor_consumo}"))
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                dcc.Graph(figure=create_figure(dfm_municipio, P2, AZUL, f"ACPM - {municipio_mayor_consumo}"))
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                dcc.Graph(figure=create_figure(dfm_municipio, P3, GRIS, f"Gasolina Extra - {municipio_mayor_consumo}"))
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+        ], style={'padding': '0 2em 2em 2em'})
+
+        content.append(graphs_row_municipio)
+
+        # Crear fila para las tablas del municipio con mayor consumo
+        tables_row_municipio = dbc.Row([
+            dbc.Col([
+                html.H4(f"Gasolina Corriente - {municipio_mayor_consumo}", style=style_header4),
+                create_table(dfm_municipio, P1)
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                html.H4(f"ACPM - {municipio_mayor_consumo}", style=style_header4),
+                create_table(dfm_municipio, P2)
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                html.H4(f"Gasolina Extra - {municipio_mayor_consumo}", style=style_header4),
+                create_table(dfm_municipio, P3)
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+        ], style={'padding': '0 2em 2em 2em'})
+
+        content.append(tables_row_municipio)
+
     return content
 
 def create_serie_tiempo_content(df_dept):
@@ -324,10 +382,10 @@ def create_serie_tiempo_content(df_dept):
     # Crear fila para las gráficas
     graphs_row = dbc.Row([
         dbc.Col([
-            dcc.Graph(figure=create_figure_ts(df_dept, P1, AZUL, "Gasolina Corriente"))
+            dcc.Graph(figure=create_figure_ts(df_dept, P1, VERDE, "Gasolina Corriente"))
         ], width=12),
         dbc.Col([
-            dcc.Graph(figure=create_figure_ts(df_dept, P2, VERDE, "ACPM"))
+            dcc.Graph(figure=create_figure_ts(df_dept, P2, AZUL, "ACPM"))
         ], width=12),
         dbc.Col([
             dcc.Graph(figure=create_figure_ts(df_dept, P3, GRIS, "Gasolina Extra"))
@@ -353,6 +411,58 @@ def create_serie_tiempo_content(df_dept):
     ], style={'padding': '0 2em 2em 2em'})
 
     content.append(tables_row)
+
+    # Encontrar el municipio con mayor consumo dentro del departamento
+    # Agrupar por municipio y producto, sumando los volúmenes
+    df_municipios_grouped = df_dept.groupby(['municipio', 'producto'])['volumen_total'].sum().reset_index()
+
+    # Encontrar el municipio con mayor consumo total (sumando todos los productos)
+    municipio_total = df_municipios_grouped.groupby('municipio')['volumen_total'].sum().reset_index()
+    if not municipio_total.empty:
+        municipio_mayor_consumo = municipio_total.loc[municipio_total['volumen_total'].idxmax()]['municipio']
+
+        # Filtrar datos solo para el municipio con mayor consumo
+        df_municipio_mayor = df_dept[df_dept['municipio'] == municipio_mayor_consumo].copy()
+
+        # Título para la sección del municipio con mayor consumo
+        content.append(dbc.Row([
+            dbc.Col([
+                html.H3(f"Municipio con mayor consumo: {municipio_mayor_consumo}", style=style_H3)
+            ], width=12)
+        ], style={'padding': '2em 2em 1em 2em'}))
+
+        # Crear fila para las gráficas del municipio con mayor consumo
+        graphs_row_municipio = dbc.Row([
+            dbc.Col([
+                dcc.Graph(figure=create_figure_ts(df_municipio_mayor, P1, VERDE, f"Gasolina Corriente - {municipio_mayor_consumo}"))
+            ], width=12),
+            dbc.Col([
+                dcc.Graph(figure=create_figure_ts(df_municipio_mayor, P2, AZUL, f"ACPM - {municipio_mayor_consumo}"))
+            ], width=12),
+            dbc.Col([
+                dcc.Graph(figure=create_figure_ts(df_municipio_mayor, P3, GRIS, f"Gasolina Extra - {municipio_mayor_consumo}"))
+            ], width=12),
+        ], style={'padding': '0 2em 2em 2em'})
+
+        content.append(graphs_row_municipio)
+
+        # Crear fila para las tablas del municipio con mayor consumo
+        tables_row_municipio = dbc.Row([
+            dbc.Col([
+                html.H4(f"Gasolina Corriente - {municipio_mayor_consumo}", style=style_header4),
+                create_table_ts(df_municipio_mayor, P1)
+            ], width=12),
+            dbc.Col([
+                html.H4(f"ACPM - {municipio_mayor_consumo}", style=style_header4),
+                create_table_ts(df_municipio_mayor, P2)
+            ], width=12),
+            dbc.Col([
+                html.H4(f"Gasolina Extra - {municipio_mayor_consumo}", style=style_header4),
+                create_table_ts(df_municipio_mayor, P3)
+            ], width=12),
+        ], style={'padding': '0 2em 2em 2em'})
+
+        content.append(tables_row_municipio)
 
     return content
 
