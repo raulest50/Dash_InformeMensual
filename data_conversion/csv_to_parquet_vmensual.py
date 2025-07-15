@@ -2,12 +2,11 @@
 import os
 import sys
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 
 def convert_vmensual_to_parquet():
     """
     Convert vmensual.csv to Parquet format and save it in the same directory.
+    Includes data type conversions and compression for optimal storage.
     """
     # Get the project root directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,12 +27,24 @@ def convert_vmensual_to_parquet():
         # Read CSV file
         df = pd.read_csv(csv_file_path)
 
-        # Convert to Parquet format
-        df.to_parquet(parquet_file_path, engine='pyarrow')
+        # Convert numeric columns to ensure proper data types
+        # This helps with filtering and calculations in the application
+        df['mes_despacho'] = pd.to_numeric(df['mes_despacho'], errors='coerce')
+        df['anio_despacho'] = pd.to_numeric(df['anio_despacho'], errors='coerce')
+        df['volumen_total'] = pd.to_numeric(df['volumen_total'], errors='coerce')
+
+        # Convert to Parquet format with compression
+        df.to_parquet(
+            parquet_file_path, 
+            engine='pyarrow',
+            compression='snappy',  # Add compression for smaller file size
+            index=False
+        )
 
         print(f"Successfully converted to {parquet_file_path}")
         print(f"Original CSV size: {os.path.getsize(csv_file_path) / (1024 * 1024):.2f} MB")
         print(f"Parquet size: {os.path.getsize(parquet_file_path) / (1024 * 1024):.2f} MB")
+        print(f"Compression ratio: {os.path.getsize(parquet_file_path) / os.path.getsize(csv_file_path):.2f}")
 
         return True
     except Exception as e:

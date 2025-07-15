@@ -83,7 +83,13 @@ def data_integrity():
     )
 
     print(f"df_union len: {len(df_union)}")
-    df_union.to_parquet(get_vmensual_fpath(), engine='pyarrow', index=False)
+    # Save with compression for smaller file size
+    df_union.to_parquet(
+        get_vmensual_fpath(), 
+        engine='pyarrow', 
+        compression='snappy',
+        index=False
+    )
 
 
 def get_query_vmensual():
@@ -93,7 +99,7 @@ def get_query_vmensual():
         f"AND producto IN ('{general.P1}', '{general.P2}', '{general.P3}') "
         f"GROUP BY anio_despacho, mes_despacho, producto, municipio, departamento "
         f"ORDER BY anio_despacho ASC "
-        f"LIMIT 250000"
+        f"LIMIT 200000"
     )
     return query
 

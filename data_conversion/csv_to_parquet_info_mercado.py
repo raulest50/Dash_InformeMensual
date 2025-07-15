@@ -2,12 +2,11 @@
 import os
 import sys
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 
 def convert_info_mercado_to_parquet():
     """
     Convert info_mercado.csv to Parquet format and save it in the same directory.
+    Includes data type conversions and compression for optimal storage.
     """
     # Get the project root directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -33,12 +32,31 @@ def convert_info_mercado_to_parquet():
             decimal=','
         )
 
-        # Convert to Parquet format
-        df.to_parquet(parquet_file_path, engine='pyarrow')
+        # Convert numeric columns to ensure proper data types
+        # This helps with filtering and calculations in the application
+        numeric_columns = df.select_dtypes(include=['object']).columns
+        for col in numeric_columns:
+            # Try to convert columns that might contain numeric values
+            try:
+                # Check if column contains numeric-like strings
+                if df[col].str.match(r'^-?\d+\.?\d*$').any():
+                    df[col] = pd.to_numeric(df[col], errors='coerce')
+            except:
+                # Skip columns that can't be converted
+                pass
+
+        # Convert to Parquet format with compression
+        df.to_parquet(
+            parquet_file_path, 
+            engine='pyarrow',
+            compression='snappy',  # Add compression for smaller file size
+            index=False
+        )
 
         print(f"Successfully converted to {parquet_file_path}")
         print(f"Original CSV size: {os.path.getsize(csv_file_path) / (1024 * 1024):.2f} MB")
         print(f"Parquet size: {os.path.getsize(parquet_file_path) / (1024 * 1024):.2f} MB")
+        print(f"Compression ratio: {os.path.getsize(parquet_file_path) / os.path.getsize(csv_file_path):.2f}")
 
         return True
     except Exception as e:
