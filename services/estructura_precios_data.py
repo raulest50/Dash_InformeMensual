@@ -8,6 +8,11 @@ import pandas as pd
 import json
 import services.general as general
 
+# WARNING: SSL verification is disabled. This is not recommended for production use.
+# This is a workaround for certificate issues with www1.upme.gov.co
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR_ESTRUCTURA_PRECIOS = os.path.join(PROJECT_ROOT, 'data', 'estructura_precios')
 
@@ -41,7 +46,7 @@ scrapea la pagina donde se pueden ver los precios de referencia y obtiene una li
 """
 def scrape_url_list():
     url = "https://www1.upme.gov.co/sipg/Paginas/Estructura-precios-combustibles.aspx"  # URL of the webpage to scrape
-    response = requests.get(url)  # Fetch the HTML content of the page
+    response = requests.get(url, verify=False)  # Fetch the HTML content of the page
     response.raise_for_status()  # Ensure the request was successful
     soup = BeautifulSoup(response.content, 'html.parser')  # Parse the HTML content using BeautifulSoup
     links = soup.find_all('a', href=True)  # Find all links in the page
@@ -55,7 +60,7 @@ def excel_url_to_df(excel_url, folder):
     # URL of the .xlsx file
     # url = xlsx_links[0][1]
     # Fetch the content of the file
-    response = requests.get(excel_url)
+    response = requests.get(excel_url, verify=False)
     response.raise_for_status()  # Ensure the request was successful
     excel_file = 'temp_file.xlsx'
     excel_filepath = os.path.join(folder, excel_file)
@@ -139,8 +144,7 @@ se deben agregar los nuevos links manualmente en xlsx_links.json y
 las etiquetas en lista_informer.json. luego este main hace el resto
 """
 if __name__ == "__main__":
-    #pkl_print()
-    #loader = EstructuraPreciosLoad()
-    #loader.update_missing_months()
     pkl_print()
-
+    loader = EstructuraPreciosLoad()
+    loader.update_missing_months()
+    pkl_print()
