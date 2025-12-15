@@ -65,19 +65,19 @@ parrafo_dt_source = """
 """
 
 # seleccionar el mes actual para t'odo el texto de conclusion al final del dashboard
-current_mes_informe = 'octubre'
-current_mes_elaboracion = 'noviembre'
+current_mes_informe = 'noviembre'
+current_mes_elaboracion = 'diciembre'
 
 def Gen_parrafoBottom():
 
     #mes_str = get_mes_name(mes)
 
     return f"""
-        Reporte mensual de la variación de ventas {current_mes_informe} 2025 (conclusión generada el 11 de {current_mes_elaboracion} de 2025): 
-        El informe mensual refleja una variación relativa positiva en el consumo de gasolina corriente del 0,05% 
+        Reporte mensual de la variación de ventas {current_mes_informe} 2025 (conclusión generada el 15 de {current_mes_elaboracion} de 2025): 
+        El informe mensual refleja una variación relativa positiva en el consumo de gasolina corriente del 2,38% 
         respecto al mes de {current_mes_informe} del año anterior. En el caso del ACPM, se reporta 
-        un aumento de 2,42%. 
-        Por su parte, las ventas de gasolina extra presentan un repunte significativo del 34,99% en comparación con {current_mes_informe} de 2024.
+        un aumento de 3,13%. 
+        Por su parte, las ventas de gasolina extra presentan un repunte significativo del 36,43% en comparación con {current_mes_informe} de 2024.
         """
         #Más información contactarse a los siguiente canal:
         #"""
