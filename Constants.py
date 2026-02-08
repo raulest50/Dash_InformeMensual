@@ -77,7 +77,7 @@ def Gen_parrafoBottom():
         El informe mensual refleja una variación relativa negativa en el consumo de gasolina corriente del 2,04% 
         respecto al mes de {current_mes_informe} del año anterior. En el caso del ACPM, se reporta 
         una disminucion en las ventas de 1,12%. 
-        Por su parte, las ventas de gasolina extra presentan un repunte significativo del 27,11% en comparación con {current_mes_informe} de 2025.
+        Por su parte, las ventas de gasolina extra presentan un repunte significativo del 27,11% en comparación con {current_mes_informe} de 2026.
         """
         #Más información contactarse a los siguiente canal:
         #"""
