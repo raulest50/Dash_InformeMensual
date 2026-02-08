@@ -39,7 +39,7 @@ dc_bbcolor = '#92CEC2'
 parrafoTop = """
     A continuación, se exponen las gráficas y tablas que muestran el comportamiento en volumen de ventas 
     de combustibles líquidos a través de Estaciones de servicio a nivel nacional (acpm, corriente y extra), 
-    de manera comparativa, para cada mes del año (2020-2025). 
+    de manera comparativa, para cada mes del año (2021-2026). 
     El mes se puede seleccionar mediante el DropDown menú.
 """
 
@@ -65,19 +65,19 @@ parrafo_dt_source = """
 """
 
 # seleccionar el mes actual para t'odo el texto de conclusion al final del dashboard
-current_mes_informe = 'diciembre'
-current_mes_elaboracion = 'enero'
+current_mes_informe = 'enero'
+current_mes_elaboracion = 'febrero'
 
 def Gen_parrafoBottom():
 
     #mes_str = get_mes_name(mes)
 
     return f"""
-        Reporte mensual de la variación de ventas {current_mes_informe} 2025 (conclusión generada el 18 de {current_mes_elaboracion} de 2026): 
-        El informe mensual refleja una variación relativa positiva en el consumo de gasolina corriente del 1,50% 
+        Reporte mensual de la variación de ventas {current_mes_informe} 2026 (conclusión generada el 07 de {current_mes_elaboracion} de 2026): 
+        El informe mensual refleja una variación relativa negativa en el consumo de gasolina corriente del 2,04% 
         respecto al mes de {current_mes_informe} del año anterior. En el caso del ACPM, se reporta 
-        un aumento de 4,66%. 
-        Por su parte, las ventas de gasolina extra presentan un repunte significativo del 35,47% en comparación con {current_mes_informe} de 2024.
+        una disminucion en las ventas de 1,12%. 
+        Por su parte, las ventas de gasolina extra presentan un repunte significativo del 27,11% en comparación con {current_mes_informe} de 2025.
         """
         #Más información contactarse a los siguiente canal:
         #"""
