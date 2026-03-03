@@ -64,23 +64,6 @@ parrafo_dt_source = """
         ciudad en específico favor contactarse con la Coordinación.
 """
 
-# seleccionar el mes actual para t'odo el texto de conclusion al final del dashboard
-current_mes_informe = 'enero'
-current_mes_elaboracion = 'febrero'
-
-def Gen_parrafoBottom():
-
-    #mes_str = get_mes_name(mes)
-
-    return f"""
-        Reporte mensual de la variación de ventas {current_mes_informe} 2026 (conclusión generada el 07 de {current_mes_elaboracion} de 2026): 
-        El informe mensual refleja una variación relativa negativa en el consumo de gasolina corriente del 2,04% 
-        respecto al mes de {current_mes_informe} del año anterior. En el caso del ACPM, se reporta 
-        una disminucion en las ventas de 1,12%. 
-        Por su parte, las ventas de gasolina extra presentan un repunte significativo del 27,11% en comparación con {current_mes_informe} de 2026.
-        """
-        #Más información contactarse a los siguiente canal:
-        #"""
 
 style_cell = {
     'textAlign': 'center',
