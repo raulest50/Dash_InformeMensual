@@ -24,8 +24,8 @@ DEFAULT_PRODUCT = "GASOLINA MOTOR CORRIENTE"
 dash.register_page(
     __name__,
     path="/mapa-consumo-municipal",
-    title="Mapa consumo municipal",
-    name="Mapa consumo municipal",
+    title="Mapa coroplético",
+    name="Mapa coroplético",
 )
 
 
@@ -52,7 +52,7 @@ layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    [html.H1("Mapa municipal de consumo", style=style_header1)],
+                    [html.H1("Mapa coroplético", style=style_header1)],
                     width=9,
                     xl=9,
                     lg=9,

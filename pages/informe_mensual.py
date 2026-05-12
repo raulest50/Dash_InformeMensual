@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 
 import Constants
+from components.loading import loading_overlay
 
 from Constants import style_data, style_cell, style_header, style_table, style_graph,\
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, zdf_options
@@ -74,59 +75,88 @@ layout = dbc.Container([
             ], justify='left', align='center', style={'padding': '2em'}
             ),
 
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id='corriente', style=style_graph)  # Placeholder for the plot
-        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
-        dbc.Col([
-            dcc.Graph(id='acpm', style=style_graph)  # Placeholder for the plot
-        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
-        dbc.Col([
-            dcc.Graph(id='extra', style=style_graph)  # Placeholder for the plot
-        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
-    ], style={'padding': '2em'}),
+    loading_overlay(
+        dbc.Row([
+            dbc.Col([
+                dcc.Graph(id='corriente', style=style_graph)  # Placeholder for the plot
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                dcc.Graph(id='acpm', style=style_graph)  # Placeholder for the plot
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                dcc.Graph(id='extra', style=style_graph)  # Placeholder for the plot
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
+        ], style={'padding': '2em'}),
+        loading_id="informe-mensual-main-graphs-loading",
+        message="Procesando graficas principales...",
+        target_components={
+            "corriente": "figure",
+            "acpm": "figure",
+            "extra": "figure",
+        },
+    ),
 
     dbc.Row([ # no tiene efecto en la visual de la pagina, solo para un page break cuando se haga ctrl + p
     ], style={'pageBreakBefore': 'always'}),
 
-    dbc.Row([
-        dbc.Col([
-            html.H4("Corriente", style=style_header4),
-            dash_table.DataTable(id='corriente-table',
-                                 style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
-                                 )
-        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
-        dbc.Col([
-            html.H4("ACPM", style=style_header4),
-            dash_table.DataTable(id='acpm-table',
-                                 style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
-                                 )
-        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
-        dbc.Col([
-            html.H4("Extra", style=style_header4),
-            dash_table.DataTable(id='extra-table',
-                                 style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
-                                 )
-        ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
-    ], style={'padding': '2em'}),
+    loading_overlay(
+        dbc.Row([
+            dbc.Col([
+                html.H4("Corriente", style=style_header4),
+                dash_table.DataTable(id='corriente-table',
+                                     style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
+                                     )
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                html.H4("ACPM", style=style_header4),
+                dash_table.DataTable(id='acpm-table',
+                                     style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
+                                     )
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12),
+            dbc.Col([
+                html.H4("Extra", style=style_header4),
+                dash_table.DataTable(id='extra-table',
+                                     style_cell=style_cell, style_header=style_header, style_data=style_data, style_table=style_table,
+                                     )
+            ], width=4, xl=4, lg=4, md=12, sm=12, xs=12)
+        ], style={'padding': '2em'}),
+        loading_id="informe-mensual-tables-loading",
+        message="Actualizando tablas...",
+        target_components={
+            "corriente-table": ["data", "columns"],
+            "acpm-table": ["data", "columns"],
+            "extra-table": ["data", "columns"],
+        },
+    ),
 
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id='corriente_full_tseries', style=style_graph)
-        ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
-    ], style={'padding': '2em'}),
+    loading_overlay(
+        [
+            dbc.Row([
+                dbc.Col([
+                    dcc.Graph(id='corriente_full_tseries', style=style_graph)
+                ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
+            ], style={'padding': '2em'}),
 
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id='acpm_full_tseries', style=style_graph)
-        ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
-    ], style={'padding': '2em'}),
+            dbc.Row([
+                dbc.Col([
+                    dcc.Graph(id='acpm_full_tseries', style=style_graph)
+                ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
+            ], style={'padding': '2em'}),
 
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id='extra_full_tseries', style=style_graph)
-        ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
-    ], style={'padding': '2em'}),
+            dbc.Row([
+                dbc.Col([
+                    dcc.Graph(id='extra_full_tseries', style=style_graph)
+                ], width=12, xl=12, lg=12, md=12, sm=12, xs=12)
+            ], style={'padding': '2em'}),
+        ],
+        loading_id="informe-mensual-full-series-loading",
+        message="Actualizando series completas...",
+        target_components={
+            "corriente_full_tseries": "figure",
+            "acpm_full_tseries": "figure",
+            "extra_full_tseries": "figure",
+        },
+    ),
 
     dbc.Row([
         dbc.Col([
