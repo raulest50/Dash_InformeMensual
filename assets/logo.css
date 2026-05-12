@@ -1,0 +1,29 @@
+.comce-logo {
+    display: block;
+    width: min(50%, 220px);
+    max-width: 100%;
+    height: auto;
+    opacity: 0.96;
+    transform: translateY(0) scale(1);
+    transform-origin: center;
+    transition-property: transform, opacity;
+    transition-duration: 160ms;
+    transition-timing-function: ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .comce-logo:hover {
+        opacity: 1;
+        transform: translateY(-2px) scale(1.035);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .comce-logo {
+        transition-duration: 1ms;
+    }
+
+    .comce-logo:hover {
+        transform: none;
+    }
+}

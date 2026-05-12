@@ -472,6 +472,15 @@ def make_timeseries_figure(pair: str | None, product: str) -> go.Figure:
         return empty_figure("Seleccione un municipio en el mapa.")
 
     df = load_consumption_data()
+    global_periods = pd.to_datetime(
+        {
+            "year": df["anio_despacho"].astype(int),
+            "month": df["mes_despacho"].astype(int),
+            "day": 1,
+        }
+    )
+    last_global_month = global_periods.max()
+
     selected = df[(df["pair_key"] == pair) & (df["producto"] == product)].copy()
     if selected.empty:
         return empty_figure("No hay serie disponible para el municipio seleccionado.")
@@ -483,6 +492,10 @@ def make_timeseries_figure(pair: str | None, product: str) -> go.Figure:
             "day": 1,
         }
     )
+    selected = selected[selected["fecha"] < last_global_month].copy()
+    if selected.empty:
+        return empty_figure("No hay serie completa disponible antes del ultimo mes.")
+
     selected = selected.sort_values("fecha")
 
     fig = go.Figure()

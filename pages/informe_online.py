@@ -11,6 +11,7 @@ import pytz
 
 import plotly.express as px
 
+from components.logo import brand_logo
 from services.general import P1, P2, P3, AZUL, VERDE, GRIS
 from services.informe_online_data import get_data_frame_online_report
 
@@ -49,7 +50,7 @@ layout = dbc.Container([
             html.H1(" Informe En Tiempo Real: Despacho Combustibles Liquidos ", style=style_header1)
         ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
         dbc.Col([
-            html.Img(src='../assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
+            brand_logo(),
         ], width=3, xl=3, lg=3, md=6, sm=6, xs=12),
     ], justify='center', align='center', style={'padding': '2em'}),
 

@@ -3,6 +3,7 @@ import dash
 from dash import dcc, html, callback, Output, Input
 import plotly.express as px
 import Constants
+from components.logo import brand_logo
 from Constants import style_header1, style_text_bottom, style_drop_label
 from services.parque_automotor_data import PqMotorLoad
 
@@ -16,7 +17,7 @@ layout = dbc.Container([
             html.H1("Parque Automotor", style=style_header1)
         ], width=9, className='text-center'),
         dbc.Col([
-            html.Img(src='../assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
+            brand_logo(),
         ], width=3),
     ], justify='center', align='center', style={'padding': '2em'}),
 

@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 
 import Constants
+from components.logo import brand_logo
 from components.loading import loading_overlay
 
 from Constants import style_data, style_cell, style_header, style_table, style_graph,\
@@ -27,7 +28,7 @@ layout = dbc.Container([
             html.H1(" Reporte Mensual Ventas Combustible Liquido", style=style_header1)
         ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
         dbc.Col([
-            html.Img(src='/assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
+            brand_logo(),
         ], width=3, xl=3, lg=3, md=6, sm=6, xs=12),
     ], justify='center', align='center', style={'padding': '2em'}),
 

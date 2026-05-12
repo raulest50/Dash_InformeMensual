@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html, callback, Output, Input
 from Constants import style_header1, style_text_bottom, style_drop_label
 import Constants
+from components.logo import brand_logo
 from services.elasticidad_demanda_data import ElasticidadDemandaLoad
 import numpy as np
 import statsmodels.api as sm
@@ -19,7 +20,7 @@ layout = dbc.Container([
             html.H1("Elasticidad de la Demanda", style=style_header1)
         ], width=9, className='text-center'),
         dbc.Col([
-            html.Img(src='../assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
+            brand_logo(),
         ], width=3),
     ], justify='center', align='center', style={'padding': '2em'}),
 

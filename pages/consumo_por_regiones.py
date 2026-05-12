@@ -12,6 +12,7 @@ import os
 from Constants import style_data, style_cell, style_header, style_table, style_graph, \
     style_header1, style_header4, style_H3, style_text_bottom, style_H2, style_drop_label, verde, azul, gris, brand_colors
 from dash.dependencies import Input, Output, State
+from components.logo import brand_logo
 from services.informe_mensual_data import InformeMensualLoad
 from services.general import P1, P2, P3, AZUL, VERDE, GRIS
 
@@ -59,7 +60,7 @@ layout = dbc.Container([
             html.H1("Consumo por Regiones", style=style_header1)
         ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
         dbc.Col([
-            html.Img(src='/assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
+            brand_logo(),
         ], width=3, xl=3, lg=3, md=6, sm=6, xs=12),
     ], justify='center', align='center', style={'padding': '2em'}),
 

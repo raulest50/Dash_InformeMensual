@@ -4,6 +4,7 @@ from dash import callback, dash_table, dcc, html
 from dash.dependencies import Input, Output
 
 import Constants
+from components.logo import brand_logo
 from components.loading import loading_overlay
 from Constants import (
     style_cell,
@@ -61,7 +62,7 @@ layout = dbc.Container(
                     xs=12,
                 ),
                 dbc.Col(
-                    [html.Img(src="/assets/logoComce.png", style={"width": "50%", "height": "50%"})],
+                    [brand_logo()],
                     width=3,
                     xl=3,
                     lg=3,

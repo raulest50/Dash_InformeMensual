@@ -9,6 +9,7 @@ import Constants
 
 import plotly.express as px
 
+from components.logo import brand_logo
 from Constants import style_header1, style_text_bottom, style_drop_label, style_header4, \
     style_cell, style_header, style_data, style_table
 
@@ -25,7 +26,7 @@ layout = dbc.Container([
                 html.H1(" Estructura de Precios Combustibles Liquidos ", style=style_header1)
             ], width=9, xl=9, lg=9, md=6, sm=6, xs=4, className='text-center', style={'textAlign': 'center'}),
             dbc.Col([
-                html.Img(src='../assets/logoComce.png', style={'width': '50%', 'height': '50%'}),
+                brand_logo(),
             ], width=3, xl=3, lg=3, md=6, sm=6, xs=12),
         ], justify='center', align='center', style={'padding': '2em'}),
 
