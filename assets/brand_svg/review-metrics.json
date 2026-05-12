@@ -1,0 +1,17 @@
+{
+  "source": "../logoComce.png",
+  "rendered": "logoComce.review.png",
+  "diff": "logoComce.diff.png",
+  "width": 1231,
+  "height": 480,
+  "mismatchedPixels": 29734,
+  "mismatchPercent": 5.032,
+  "reviewFiles": [
+    "logoComce.review.png",
+    "logoComce-mono.review.png",
+    "logoComce-white.review.png",
+    "logoComce-compact.review.png",
+    "logoComce.web-review.png",
+    "logoComce.print-review.png"
+  ]
+}
